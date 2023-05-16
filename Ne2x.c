@@ -106,7 +106,7 @@
 #define NOEXPLAIN	1	// set = 1 for not printing out explanations
 						// (only the headers for columns of values are printed)
 
-#define USETMP		1	// set = 1 to use temporary files when possible (At LD)
+#define USETMP		0	// set = 1 to use temporary files when possible (At LD)
 						// set = 0 then use arrays instead
 
 
