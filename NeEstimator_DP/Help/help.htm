@@ -1,0 +1,969 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN'
+   'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>NeEstimator V2 Help</title>
+	<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+	<link href="help.css" media="screen" rel="stylesheet" type="text/css" /><script>
+<!-- Hide from old browsers
+
+/******************************************
+* Find In Page Script -- Submitted/revised by Alan Koontz (alankoontz@REMOVETHISyahoo.com)
+* Visit Dynamic Drive (http://www.dynamicdrive.com/) for full source code
+* This notice must stay intact for use
+******************************************/
+
+//  revised by Alan Koontz -- May 2003
+
+var TRange = null;
+var dupeRange = null;
+var TestRange = null;
+var win = null;
+
+
+//  SELECTED BROWSER SNIFFER COMPONENTS DOCUMENTED AT
+//  http://www.mozilla.org/docs/web-developer/sniffer/browser_type.html
+
+var nom = navigator.appName.toLowerCase();
+var agt = navigator.userAgent.toLowerCase();
+var is_major   = parseInt(navigator.appVersion);
+var is_minor   = parseFloat(navigator.appVersion);
+var is_ie      = (agt.indexOf("msie") != -1);
+var is_ie4up   = (is_ie && (is_major >= 4));
+var is_not_moz = (agt.indexOf('netscape')!=-1)
+var is_nav     = (nom.indexOf('netscape')!=-1);
+var is_nav4    = (is_nav && (is_major == 4));
+var is_mac     = (agt.indexOf("mac")!=-1);
+var is_gecko   = (agt.indexOf('gecko') != -1);
+var is_opera   = (agt.indexOf("opera") != -1);
+
+
+//  GECKO REVISION
+
+var is_rev=0
+if (is_gecko) {
+temp = agt.split("rv:")
+is_rev = parseFloat(temp[1])
+}
+
+
+//  USE THE FOLLOWING VARIABLE TO CONFIGURE FRAMES TO SEARCH
+//  (SELF OR CHILD FRAME)
+
+//  If you want to search another frame, change from "self" to
+//  the name of the target frame:
+//  e.g., var frametosearch = 'main'
+
+//var frametosearch = 'main';
+var frametosearch = self;
+
+
+function search(whichform, whichframe) {
+
+//  TEST FOR IE5 FOR MAC (NO DOCUMENTATION)
+
+if (is_ie4up && is_mac) return;
+
+//  TEST FOR NAV 6 (NO DOCUMENTATION)
+
+if (is_gecko && (is_rev <1)) return;
+
+//  TEST FOR Opera (NO DOCUMENTATION)
+
+if (is_opera) return;
+
+//  INITIALIZATIONS FOR FIND-IN-PAGE SEARCHES
+
+if(whichform.findthis.value!=null && whichform.findthis.value!='') {
+
+       str = whichform.findthis.value;
+       win = whichframe;
+       var frameval=false;
+       if(win!=self)
+{
+
+       frameval=true;  // this will enable Nav7 to search child frame
+       win = parent.frames[whichframe];
+
+}
+
+
+}
+
+else return;  //  i.e., no search string was entered
+
+var strFound;
+
+//  NAVIGATOR 4 SPECIFIC CODE
+
+if(is_nav4 && (is_minor < 5)) {
+
+  strFound=win.find(str); // case insensitive, forward search by default
+
+//  There are 3 arguments available:
+//  searchString: type string and it's the item to be searched
+//  caseSensitive: boolean -- is search case sensitive?
+//  backwards: boolean --should we also search backwards?
+//  strFound=win.find(str, false, false) is the explicit
+//  version of the above
+//  The Mac version of Nav4 has wrapAround, but
+//  cannot be specified in JS
+
+
+        }
+
+//  NAVIGATOR 7 and Mozilla rev 1+ SPECIFIC CODE (WILL NOT WORK WITH NAVIGATOR 6)
+
+if (is_gecko && (is_rev >= 1)) {
+
+    if(frameval!=false) win.focus(); // force search in specified child frame
+    strFound=win.find(str, false, false, true, false, frameval, false);
+
+//  The following statement enables reversion of focus
+//  back to the search box after each search event
+//  allowing the user to press the ENTER key instead
+//  of clicking the search button to continue search.
+//  Note: tends to be buggy in Mozilla as of 1.3.1
+//  (see www.mozilla.org) so is excluded from users
+//  of that browser.
+
+    if (is_not_moz)  whichform.findthis.focus();
+
+//  There are 7 arguments available:
+//  searchString: type string and it's the item to be searched
+//  caseSensitive: boolean -- is search case sensitive?
+//  backwards: boolean --should we also search backwards?
+//  wrapAround: boolean -- should we wrap the search?
+//  wholeWord: boolean: should we search only for whole words
+//  searchInFrames: boolean -- should we search in frames?
+//  showDialog: boolean -- should we show the Find Dialog?
+
+
+}
+
+ if (is_ie4up) {
+
+  // EXPLORER-SPECIFIC CODE revised 5/21/03
+
+  if (TRange!=null) {
+
+   TestRange=win.document.body.createTextRange();
+
+
+
+   if (dupeRange.inRange(TestRange)) {
+
+   TRange.collapse(false);
+   strFound=TRange.findText(str);
+    if (strFound) {
+        //the following line added by Mike and Susan Keenan, 7 June 2003
+        win.document.body.scrollTop = win.document.body.scrollTop + TRange.offsetTop;
+        TRange.select();
+        }
+
+
+   }
+
+   else {
+
+     TRange=win.document.body.createTextRange();
+     TRange.collapse(false);
+     strFound=TRange.findText(str);
+     if (strFound) {
+        //the following line added by Mike and Susan Keenan, 7 June 2003
+        win.document.body.scrollTop = TRange.offsetTop;
+        TRange.select();
+        }
+
+
+
+   }
+  }
+
+   if (TRange==null || strFound==0) {
+   TRange=win.document.body.createTextRange();
+   dupeRange = TRange.duplicate();
+   strFound=TRange.findText(str);
+    if (strFound) {
+        //the following line added by Mike and Susan Keenan, 7 June 2003
+        win.document.body.scrollTop = TRange.offsetTop;
+        TRange.select();
+        }
+
+
+   }
+
+ }
+
+  if (!strFound) alert ("String '"+str+"' not found!") // string not found
+
+
+}
+// -->
+</script>
+</head>
+<body pbzloc="256">
+<p pbzloc="9">&nbsp;</p>
+
+<form name="form1" onsubmit="search(document.form1, frametosearch); return false"><input name="findthis" size="15" title="Press 'ALT s' after clicking submit to repeatedly search page" type="text" /> <input accesskey="s" type="submit" value="Search" />&nbsp;</form>
+
+<ul class="navbar" pbzloc="8">
+	<li><a href="#Home">Home</a></li>
+	<li><a href="contents.htm">Contents</a></li>
+	<li><a href="#Contact">Contact</a></li>
+	<li><a href="Help.pdf">Print</a></li>
+</ul>
+
+<div id="content" pbzloc="387">
+<h1 align="center" pbzloc="66"><a id="Home" name="Home"><font color="#000000" pbzloc="187">NeEstimator 2.0 Help</font></a></h1>
+</div>
+
+<p>&nbsp;</p>
+
+<table align="center" border="0" cellpadding="8" cellspacing="0" pbzloc="782" width="100%">
+	<tbody>
+		<tr>
+			<td>
+			<h1 pbzloc="37"><a id="Software_Information" name="Software_Information" pbzloc="115">Software Information</a></h1>
+
+			<h2 pbzloc="48"><a id="SoftInfo_InBrief" name="SoftInfo_InBrief" pbzloc="47">In Brief</a></h2>
+
+			<p pbzloc="93">The NeEstimator V2 software estimates contemporary (or recent) effective population sizes (<em>N<sub>e</sub></em>) from genetic data.</p>
+
+			<p pbzloc="110"><strong>Price:</strong> This software is available free for scientific use.</p>
+
+			<p pbzloc="127"><strong>Citation: </strong>Do, C., Waples, R. S., Peel, D., Macbeth, G. M., Tillett, B. J. &amp; Ovenden, J. R. (Submitted). NeEstimator V2: re-implementation of software for the estimation of contemporary effective population size (<em>N<sub>e</sub></em>) from genetic data. <em>Molecular Ecology Resources</em>.</p>
+
+			<p pbzloc="2"><strong>Release date:</strong> <a pbzloc="118">Month to be added</a>, 2013</p>
+
+			<p><strong>Version:</strong> 2.0</p>
+
+			<p><strong>Format:</strong> The user can select Mac, Linux and Windows versions.</p>
+
+			<p pbzloc="58"><strong>Release notes:</strong> This version is a major re-write of NeEstimator version 1.3, which was released&nbsp;June 2004.</p>
+
+			<h2 pbzloc="4"><a id="SoftInfo_Details" name="SoftInfo_Details" pbzloc="3">More Details</a></h2>
+
+			<p pbzloc="771">NeEstimator V2 is a tool for estimating contemporary effective population size (<em>N<sub>e</sub></em>) using multi-locus diploid genotypes from population samples. By &lsquo;contemporary&rsquo; we mean that the estimates apply to the time period(s) encompassed by the samples.</p>
+
+			<p>Four methods are available to calculate <em>N<sub>e</sub></em>; three single-sample (point estimation) methods and one two-sample (temporal) method.</p>
+
+			<p pbzloc="130">NeEstimator V2 does not include third-party programs; all methods are implemented by NeEstimator V2 code.</p>
+
+			<p>The user needs to provide genotypic data in one of the accepted formats (FSTAT, GENEPOP).</p>
+
+			<p>The methods are as follows.</p>
+
+			<p><strong>Single-sample (point estimation) methods</strong></p>
+
+			<ol>
+				<li>The bias-corrected version of the method based on linkage disequilibrium (LD), (<a href="#Hill1981" title="Hill, 1981 #2800">Hill 1981</a>; <a href="#Waples2006" title="Waples, 2006 #3720">Waples 2006</a>; <a href="#Waples2010" title="Waples, 2010 #4018">Waples &amp; Do 2010</a>),</li>
+				<li>The method using heterozygote-excess (<a href="#Pudovkin1996" title="Pudovkin, 1996 #2809">Pudovkin<em> et al.</em> 1996</a>; <a href="#Zndanova2008" title="Zhdanova, 2008 #3892">Zhdanova &amp; Pudovkin 2008</a>), and</li>
+				<li>The method using molecular co-ancestry (<a href="#Nomura" title="Nomura, 2008 #4175">Nomura 2008</a>).</li>
+			</ol>
+
+			<p><strong>Two-sample (temporal) method (Waples 1989)</strong></p>
+
+			<ol pbzloc="201">
+				<li>The method using moment-based <em>F</em>-statistics; user can choose from three different estimators of <em>F</em>: <em>F<sub>c</sub></em>(<a href="#Nei1981" title="Nei, 1981 #2804">Nei &amp; Tajima 1981</a>), <em>F<sub>k</sub></em>(<a href="#Pollack1983" title="Pollak, 1983 #2808">Pollak 1983</a>) or&nbsp;<em>F<sub>s</sub></em>&nbsp;(<a href="#Jorde2007" title="Jorde, 2007 #3898">Jorde &amp; Ryman 2007</a>).</li>
+			</ol>
+
+			<p pbzloc="209">The software provides estimates of confidence intervals for all methods. Estimates of <em>N<sub>e</sub></em>&nbsp;are corrected for possible biases due to missing data according to the simulation study of <a href="#Peel2013">Peel <em pbzloc="208">et al</em>. (2013)</a>.</p>
+
+			<h2 pbzloc="78"><a id="Citing" name="Citing" pbzloc="77">Citing</a> the software</h2>
+
+			<p pbzloc="211">When publishing results based on NeEstimator analyses, you should cite the original methods as well as NeEstimator program note. For example:</p>
+
+			<p pbzloc="210">&ldquo;We estimated <em>N<sub>e</sub></em> using the molecular co-ancestry method of Nomura (2008), as implemented in NeEstimator V2 (Do <em>et al.</em> Submitted).&rdquo;</p>
+
+			<p>&nbsp;</p>
+
+			<p pbzloc="9">Do, C., Waples, R. S., Peel, D., Macbeth, G. M., Tillett, B. J. &amp; Ovenden, J. R. (Submitted). NeEstimator V2: re-implementation of software for the estimation of contemporary effective population size (<em>N<sub>e</sub></em>) from genetic data. <em>Molecular Ecology Resources</em>.</p>
+
+			<h2 pbzloc="89"><a id="Requirements" name="Requirements" pbzloc="88">Minimum Computing Requirements</a></h2>
+
+			<p>NeEstimator V2 works on Windows, Linux and Mac operating systems. Java Runtime Environment (JRE) version 6 or above should be present on the user&rsquo;s computer. Testing was performed on Windows XP, Windows Vista, and Windows 7, Linux Ubuntu 12.04 and Mac OS X 10.6. The software is expected to run on newer releases of these platforms.</p>
+
+			<h2 pbzloc="101"><a id="Downloading" name="Downloading" pbzloc="100">Downloading the Software</a></h2>
+
+			<p pbzloc="7">Software can be downloaded from <a href="http://molecularfisherieslaboratory.com.au/downloadables">here</a>.<br />
+			(Note - This link will not be active until MER manuscript is accepted for publication).</p>
+
+			<h2 pbzloc="112"><a id="DownloadContents" name="DownloadContents" pbzloc="111">Contents of the Download</a></h2>
+
+			<p pbzloc="167">The software is downloaded as a .zip file containing four folders (directories) and a ReadMe file.</p>
+
+			<p>Folder: GUI</p>
+
+			<ol>
+				<li>NeEstimator.jar (the GUI)</li>
+			</ol>
+
+			<p pbzloc="18">Folder: Executables</p>
+
+			<ol>
+				<li pbzloc="11" value="2">Ne2.exe (executable for Windows), Ne2M (executable for Mac) and <a>Ne2L</a>&nbsp;(executable for Linux). Users need to implement the correct version for their operating system.</li>
+			</ol>
+
+			<p>Folder: Data</p>
+
+			<p pbzloc="21" style="margin-left: 36pt">3) &nbsp;8Ne50.dat and 8Ne50.gen (test input file)</p>
+
+			<p pbzloc="14" style="margin-left: 36pt">4) 8Ne50Ne.txt (examples of a basic output file)</p>
+
+			<p>Folder: Help</p>
+
+			<p style="margin-left: 36pt">5) &nbsp;Help file (which will also be available from within the GUI in user&rsquo;s web browser) as a .doc and .html.</p>
+
+			<p style="margin-left: 36pt">6) &nbsp;Accessory files (mathematical details of methods implemented by software [insert filename] and template text files for batch processing of input files [multi.txt and multiplus.txt]).</p>
+
+			<h2 pbzloc="123"><a id="Contact" name="Contact" pbzloc="122">Contact for Problems and Feedback</a></h2>
+
+			<p pbzloc="16">Please send</p>
+
+			<ol>
+				<li>Feedback and suggestions to <a href="http://molecularfisherieslaboratory.com.au/contact-us">http://molecularfisherieslaboratory.com.au/contact-us</a> ,</li>
+				<li>General questions to Robin Waples (<a href="mailto:Robin.Waples@noaa.gov">Robin.Waples@noaa.gov</a>) or Jenny Ovenden (<a href="mailto:zljovend@uq.edu.au">zljovend@uq.edu.au</a>)</li>
+				<li>Questions relating to running the software to Chi Do (<a href="mailto:Chi.Do@noaa.gov">Chi.Do@noaa.gov</a>)</li>
+			</ol>
+
+			<h2 pbzloc="137"><a id="Updates" name="Updates" pbzloc="24">Updates</a></h2>
+
+			<p>Check back regularly to the web site to see if the software has been upgraded.</p>
+
+			<h2 pbzloc="140"><a id="Version" name="Version" pbzloc="139">Version Changes</a></h2>
+
+			<p pbzloc="212">Version 2.0 has been comprehensively updated since version 1.3.</p>
+
+			<p pbzloc="23">The major changes are</p>
+
+			<p style="margin-left: 36pt">1) Addition of two new single-sample methods and the bias-corrected version of the LD method;</p>
+
+			<p style="margin-left: 36pt">2) Options for three different estimators of F in the temporal method;</p>
+
+			<p style="margin-left: 36pt">3) Versions available for Mac and Linux as well as Windows;</p>
+
+			<p style="margin-left: 36pt">4) Options for screening out rare alleles for all methods;</p>
+
+			<p style="margin-left: 36pt">5) Implementation of improved routines for dealing with missing data;</p>
+
+			<p style="margin-left: 36pt">6) Greatly increased upper limits for numbers of loci and individuals;</p>
+
+			<p style="margin-left: 36pt">7) Confidence intervals provided for all methods;</p>
+
+			<p style="margin-left: 36pt">8) Comprehensive output files in formats compatible with downstream processing (eg. .xls)</p>
+
+			<p style="margin-left: 36pt">9) Estimation of temporal <em>N<sub>e</sub></em> using plans (ie. sampling schemes) I and II (<a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_5" title="Nei, 1981 #2804">Nei &amp; Tajima 1981</a>).</p>
+
+			<p style="margin-left: 36pt">10) Methods for running the software using command line and batch processing of multiple input files.</p>
+
+			<h1 pbzloc="30"><a id="FAQ" name="FAQ" pbzloc="123">Frequently Asked Questions</a></h1>
+
+			<p pbzloc="46">Also see <a href="http://molecularfisherieslaboratory.com.au/neestimator-software/ " pbzloc="43">here</a>&nbsp;(Once MER manuscript is accepted for publication).</p>
+
+			<p><strong>Q:</strong> <strong>Is there a version of NeEstimator V2 available for Mac or Linux?</strong><br />
+			<strong>A:</strong> Yes. The Java GUI is the same for all platforms; it calls a program called &lsquo;Ne2L&rsquo; for Linux or &lsquo;Ne2M&rsquo; for Mac computers. The user needs to download the correct program for their computer platform.</p>
+
+			<p><strong>Q:</strong> <strong>How do I get a copy of NeEstimator V2?</strong><br />
+			<strong>A:</strong> Download the software from the web address above.</p>
+
+			<p><strong>Q:</strong> <strong>How do I get NeEstimator V2 started once I have downloaded the installation file?</strong><br />
+			<strong>A:</strong> Download the .zip package and expand it. Among other files, it contains the java executable files &ldquo;NeGUI.jar&rdquo;, the help file, the Ne-program for your system:</p>
+
+			<ul>
+				<li>Ne2.exe or windows</li>
+				<li>Ne2M for Mac</li>
+				<li pbzloc="49">Ne2L for <a>Linux</a></li>
+			</ul>
+
+			<p>The two files &ldquo;NeGUI.jar&rdquo; and the Ne-program should be in the same directory in your machine.</p>
+
+			<p>Once you have a copy of the installation file on your computer, double-click the icon for NeGUI.jar. You will now be able to use the software.</p>
+
+			<p pbzloc="50"><strong>Q:</strong> <strong pbzloc="26">Can I use my data that are saved in Microsoft Access or Excel?</strong><br />
+			<strong>A:</strong> Yes, you can use data from any program as long as it is saved as a text file in one of the accepted formats (GENEPOP, FSTAT).</p>
+
+			<p pbzloc="221"><strong>Q:</strong> <strong>How do I uninstall NeEstimator?</strong><br />
+			<strong><strong>A:</strong></strong> Delete NeGUI.jar ,Ne2.exe, Ne2M or Ne2L for Windows, Mac or Linux respectively, the help file and empty the trash.</p>
+
+			<p pbzloc="227"><strong pbzloc="220">Q:&nbsp; How will estimates from the LD method differ from previous implementations?</strong><br />
+			<strong>A:</strong>&nbsp; The new implementation of the LD method includes the (<a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_15" title="Waples, 2006 #3720">Waples 2006</a>) bias correction, which was not included in the version included in NeEstimator V1.3.&nbsp; As a consequence, LD estimates from V2 will generally be lower than those from the previous implementation.&nbsp; If there are no missing data, LD results from NeEstimator V2 should be identical to those obtained from LDNe (<a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_16" title="Waples, 2008 #3843">Waples &amp; Do 2008</a>).&nbsp; Some differences can be expected if not all individuals have been scored for all loci, as V2 implements an improved method for dealing with missing data.</p>
+
+			<p pbzloc="228"><strong pbzloc="230">Q: How large a dataset can V2 accommodate?</strong><br />
+			<strong>A:</strong> The capacity for numbers of individuals, loci, and populations are very large, but we cannot at present identify a specific upper limit.&nbsp; We have successfully run the LD method on a dataset with 20-30 individuals and &gt;46,000 diallelic (SNP) loci.&nbsp; These analyses required consideration of over 1 billion pairwise comparisons of loci.&nbsp; User feedback on experiences using large datasets would be appreciated.</p>
+
+			<h1><a id="Quick_Start" name="Quick_Start">Quick Start</a></h1>
+
+			<p pbzloc="278">Download the zip package from <a href="http://molecularfisherieslaboratory.com.au/downloadables">here</a>.</p>
+
+			<p pbzloc="275">Upack (expand) the zip package. Place into a suitable folder(directory) on your hard drive. Run the NeEstimator V2 software by starting the graphical user interface as followes:</p>
+
+			<p pbzloc="276">Windows or Mac Users: Double click on the NeEstimator.jar program. There may be a lag on the Mac before the GUI appears. Be patient.</p>
+
+			<p>Linux Users: From the command line execute:&nbsp; &lsquo;<strong pbzloc="262">java &ndash;jar ./NeEstimator.jar&rsquo;</strong>.</p>
+
+			<p pbzloc="254">Load an input file using buttons on the interface.&nbsp; Click <strong>&ldquo;Run NeEstimator&rdquo;. </strong>&nbsp;On completion, look for output in the same directory as the input file. &nbsp;This runs all methods using default options.&nbsp;&nbsp; See below or click the &lsquo;<strong>Help</strong>&rsquo;&nbsp;button for details regarding numerous other options.</p>
+
+			<p pbzloc="280">&nbsp;</p>
+
+			<h1 pbzloc="157"><a id="Using" name="Using">Using the Software</a></h1>
+
+			<h2 pbzloc="160"><a id="Using_InBrief" name="Using_InBrief">In brief</a></h2>
+
+			<p>The major features of the user interface are shown below.</p>
+
+			<p>&nbsp;</p>
+
+			<p><img src="Images/screen.png" /></p>
+
+			<p pbzloc="169">&nbsp;</p>
+
+			<h2 pbzloc="345"><a id="Using_Details" name="Using_Details">More details about the user interface</a></h2>
+
+			<h3 pbzloc="349"><a id="UI_InputData" name="UI_InputData">Input data</a></h3>
+
+			<p>Choose the desired input data file from the selection displayed in the drop down menu under <strong>&ldquo;Choose File&rdquo;</strong>. An option exists to display only data files with &ldquo;.TXT&rdquo;, &ldquo;.DAT&rdquo; and &ldquo;.GEN&rdquo; extensions.</p>
+
+			<p>Format of input data is either GENEPOP&rdquo; or &ldquo;FSTAT&rdquo;. See <strong pbzloc="352">&ldquo;About the Input Data Format&rdquo; </strong>below for more details.</p>
+
+			<p pbzloc="353">When an input file is loaded, the first line appears in the dialog box.&nbsp; Details about the input data (such as the number of loci, the number of populations and the number of individuals per population) are displayed by pressing the <strong>&ldquo;Info&rdquo;</strong> button.</p>
+
+			<h3 pbzloc="357"><a id="UI_AnalysisMethod" name="UI_AnalysisMethod">Selecting an analysis method</a></h3>
+
+			<p>One or multiple analysis methods for calculating <em>N<sub>e</sub></em>&nbsp;(linkage disequilibrium, heterozygote- excess, molecular co-ancestry or temporal method) can be selected by checking associated boxes in the <strong>&ldquo;Methods&rdquo;</strong> section in the upper right of the interface.</p>
+
+			<p>For the linkage disequilibrium method, estimates of <em pbzloc="284">N<sub pbzloc="283">e</sub></em>&nbsp;are strongly affected by the effect of mating system (random mating or lifetime monogamy) (<a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_15" title="Waples, 2006 #3720">Waples 2006</a>; <a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_17" title="Waples, 2010 #4018">Waples &amp; Do 2010</a>; <a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_18" title="Weir, 1980 #2833">Weir &amp; Hill 1980</a>). If the linkage disequilibrium method is selected the user must define the mating system by checking either &ldquo;<strong>Random Mating&rdquo;</strong> or &ldquo;<strong>Monogamy</strong>&rdquo;; &lsquo;random&rsquo; is the default.</p>
+
+			<p pbzloc="351">If the temporal method is selected, &ldquo;<strong>Populations</strong>&rdquo; in the input file become &ldquo;<strong>Samples</strong>&rdquo; taken at different generations. The default sampling strategy is Plan II; however the user can choose Plan I (<a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_14" title="Waples, 2005 #3845">Waples 2005</a>).&nbsp; Note that for Plan I sampling, the user must have an estimate of the census population size at the time of the initial sample.</p>
+
+			<p pbzloc="358">Users can also choose how to calculate the <em>F</em>-statistics; <em>F<sub>c</sub></em>&nbsp;(<a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_5" title="Nei, 1981 #2804">Nei &amp; Tajima 1981</a>), <em>F<sub>k</sub></em>&nbsp;(<a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_9" title="Pollak, 1983 #2808">Pollak 1983</a>) or <em>F<sub>s</sub></em>&nbsp;(<a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_3" title="Jorde, 2007 #3898">Jorde &amp; Ryman 2007</a>) using the <strong>&ldquo;More Choices&rdquo;</strong> button.</p>
+
+			<p pbzloc="359">One or multiple methods of calculating <em>F</em> can be selected, in combination with Plan I or Plan II, by choosing the pull-down menu and scrolling up and down.</p>
+
+			<h3 pbzloc="363"><a id="UI_Temporal" name="UI_Temporal">Temporal method</a></h3>
+
+			<h4 pbzloc="368"><a id="UI_Temporal_Brief" name="UI_Temporal_Brief"><em>In brief</em></a></h4>
+
+			<h5 pbzloc="734"><a id="Temporal_SinglePop" name="Temporal_SinglePop"><u>A single population sampled at two or more time periods.</u></a></h5>
+
+			<p pbzloc="369">For this common situation, the user simply enters in the dialog box the generations corresponding to each sampling event, beginning with generation 0 for the first sample.&nbsp; For samples taken in generations 0, 3, and 6.5, the entry would look like this:</p>
+
+			<p>0,3,6.5 or 0 3 6.5</p>
+
+			<p>Estimates will be provided for all possible pairwise comparisons of samples: gen 0 with gen 3, gen 0 with gen 6, and gen 3 with gen 6.5</p>
+
+			<h5 pbzloc="739"><a id="Temporal_MultPop1" name="Temporal_MultPop1"><u pbzloc="282">Multiple populations sampled in the same time periods.</u></a></h5>
+
+			<p>If only one set of generation times is specified, it is assumed to apply to all subsequent populations. So, this common scenario also only requires the same type of input as for a single population (above).</p>
+
+			<h5 pbzloc="743"><a id="Temporal_MultPop2" name="Temporal_MultPop2"><u>Multiple populations sampled in different time periods</u></a></h5>
+
+			<p pbzloc="744">In this case, the rules for each population are contained in a &lsquo;generation set&rsquo; as described above, with each generation set being separated by a &ldquo;/&rdquo;.&nbsp; If fewer sets than populations are provided, the last set will be applied to all remaining populations.</p>
+
+			<h4 pbzloc="374"><a id="UI_Temporal_Detail" name="UI_Temporal_Detail"><em>More details</em></a></h4>
+
+			<p>The <strong>&ldquo;?&rdquo;</strong>&nbsp; button (enabled if temporal is checked) provides brief instructions on how to enter generation sets for both plans. If there are entries in the textbox, clicking this button will also evaluate the entries, and list any errors at the bottom of the dialog box. If there are no errors, entries in the textbox will be truncated if it can reduce the length of the currently displayed texts.</p>
+
+			<p pbzloc="375">The textbox for temporal method analyses on populations sampled using Plan II contains generation sets per population. Generation sets are separated by a comma or blank. Generation sets in subsequent populations are separated by slashes. For example:</p>
+
+			<p align="center"><strong>0,1 / 0,2</strong></p>
+
+			<p align="center"><strong>or</strong></p>
+
+			<p align="center"><strong>0 1 / 0 2</strong></p>
+
+			<p>indicates that two populations are present in the input file; the first population was sampled at generation 0 and generation 1 and the second was sampled at generation 0 and generation 2.</p>
+
+			<p>If there were more populations in the input data, then generational sets would need to be specified in the same way. If not specified, generation sets in the remaining populations would be assumed to be the same as population 2. Alternatively, a colon could be added&nbsp; (ie &lsquo;<strong>/:</strong>&rsquo;) to indicate that sampling for the remaining populations was identical.</p>
+
+			<p>The purpose of using colon for repetition is to minimise the entries into the textbox. The user can enter without using colon, if required.</p>
+
+			<p>Clicking the question mark button (&lsquo;<strong>?</strong>&rsquo;) next to the textbox will truncate the entries in the textbox. The truncation performed by the code will use colons for repetitions whenever appropriate; so the user doesn&rsquo;t need to master them. The examples given here are to help the user to interpret those shortcuts.</p>
+
+			<p>For plan I sampling, each generation set is described like plan II, but should be preceded by census size N and a colon (colon serves as a separator of census size and generations). Here, the first whole number greater than 0 indicates the census population size and a colon to separate this parameter from generations sampled (instead of indicating a repetition). Each generation sampled is again separated by a comma or blank. For example</p>
+
+			<p align="center" pbzloc="294"><strong>1000: 0, 1</strong></p>
+
+			<p align="center" pbzloc="293">or</p>
+
+			<p align="center"><strong>1000:&nbsp; 0&nbsp;&nbsp;&nbsp; 1</strong></p>
+
+			<p>Suppose this set is the first set entered in the textbox. Then these entries mean that census size for population 1 is 10000 and generation 0 and 1 are sampled.</p>
+
+			<p>If more than one population is sampled, populations are again separated by a slash. In the following example, in addition to population one described above, population two has a census size of 500 individuals and was sampled at generations 0 and 2.</p>
+
+			<p align="center"><strong>1000: 0, 1/ 500: 0, 2</strong></p>
+
+			<p pbzloc="289">Repeated parameters in populations sampled using Plan I are omitted. If the population census size is the same in population two as population one, but sampled generations differ, census size can be omitted from the text box</p>
+
+			<p align="center" pbzloc="287" style="margin-left: 36pt"><strong>1000: 0, 1/ 0, 2</strong><strong> </strong>is the same as <strong>1000: 0, 1/ 1000: 0, 2</strong></p>
+
+			<p pbzloc="291">Similarly, if sampled generations are the same but census size differs, sampled generations can be omitted from the text box</p>
+
+			<p align="center" pbzloc="290"><strong>1000: 0, 1/ 500:</strong><strong>&nbsp; </strong>is the same as<strong> 1000: 0, 1/ 500: 0, 1</strong></p>
+
+			<p>Note that a colon must still follow the census size 500.</p>
+
+			<p>If both census size and sampled generations are the same in population 1 and 2, parameters only need to be defined once followed by a slash to indicate multiple populations and one semicolon to represent the repetition.</p>
+
+			<p align="center" pbzloc="303" style="margin-left: 18pt"><strong pbzloc="381">1000: 0, 1/ :</strong><strong pbzloc="292">&nbsp;</strong><strong pbzloc="300"> is the same as </strong><strong pbzloc="292">1000: 0, 1/ 1000: 0, 1</strong></p>
+
+			<p>Now, suppose all populations afterwards follow the same generation sets as population 2 (identical census size and generation timelines). Then entries for textbox can stop! Note that in case 4 above, generation sets for population 1 and 2 are identical, so the entries in the textbox can be reduced to:</p>
+
+			<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>1000: 0, 1</strong></p>
+
+			<p pbzloc="376">If the user has specified a certain range of populations to process using the population range textbox in &ldquo;<strong>Options</strong>&rdquo; panel, then in temporal method, the range of populations will be interpreted as the <em>range of samples</em>. In such case, the generation sets should apply to the range, starting from the first generation listed in the textbox applying to the first sample in the range. The temporal methods require two samples, so if the last sample (in the input file or in the <em>range of samples</em>) is taken at the first generation, then this last sample has no companion to run temporal method! For example, if there are only 11 samples in input file, all taken at generations 0, 1, then the first 10 samples are for populations 1 to 5, population 6 has sample 11 taken at generation 0, but no sample at generation 1.</p>
+
+			<h3 pbzloc="380"><a id="UI_Crit" name="UI_Crit">Setting critical values</a></h3>
+
+			<p pbzloc="305">The option for screening out rare alleles at various frequencies is available for all methods except molecular co-ancestry. The presence of rare alleles does not bias the results of this method (T Nomura, personal communication).</p>
+
+			<p pbzloc="299">The rare-allele screening option using critical values is intended to facilitate evaluation of the effects of low frequency alleles on estimates of effective size, which have been documented for both the temporal and linkage disequilibrium (LD) methods and are likely to also apply to the heterozygote-excess method.</p>
+
+			<p>The default values of Pcrit are 0.05, 0.02, and 0.01; however, these values can be changed manually or new values added. User-defined Pcrit values are rounded off up to 3 decimal places before being added to the list. Therefore, 0.001 is the smallest increment for critical values. The maximum number of Pcrit values is nine.&nbsp; By default, the program also calculates results for all methods using all alleles (reported as Pcrit = 0+).</p>
+
+			<p pbzloc="382">Alleles are excluded only if they occur at frequency LESS than PCrit; therefore, all alleles whose frequencies are equal to or greater than the specified value of Pcrit will be used in the analysis.&nbsp; For the LD method, it is important to set PCrit high enough to exclude alleles that occur in only a single copy (in one heterozygote) in the sample.&nbsp; This can be accomplished by ensuring that PCrit &gt; 1/(2<em>S</em>), where <em>S</em> is the number of individuals with data at both pairs of loci.&nbsp; This same criterion might be important for other methods, but that has not been evaluated.</p>
+
+			<h3 pbzloc="386"><a id="UI_Options" name="UI_Options">Options panel</a></h3>
+
+			<h4 pbzloc="392"><a id="UI_Options_Brief" name="UI_Options_Brief"><em>In brief</em></a></h4>
+
+			<p pbzloc="388">Subsamples of populations or loci for analysis can be defined in the <strong>&ldquo;Options&rdquo;</strong> panel by selecting associated checkboxes. This can be used to reduce excessive output file size and to allow the user to generate one or more specific files tailored to their analyses. The user can also select to omit confidence intervals from output files.</p>
+
+			<p>The options include defining which populations to include in the analyses by checking <strong>&ldquo;Population range to run&rdquo;</strong> or <strong>&ldquo;Up to Individual per population&rdquo;.</strong> The first option defines the range of populations to run. &nbsp;The second option defines the maximum number of individuals per population to be processed. Values for both parameters are entered in the small text boxes adjacent to each option.</p>
+
+			<h4 pbzloc="397"><a id="UI_Options_Details" name="UI_Options_Details"><em>More details</em></a></h4>
+
+			<p pbzloc="398">The user can control the loci used in an analysis in two ways. <strong>&ldquo;<a>Omitting Loci&rdquo;</a></strong> is used when there are only a handful of badly scored loci to be omitted, which are likely to be scattered in the input data, and not consecutive. Alternatively, <strong>&ldquo;Ranges&rdquo;</strong> are used when the user wants to choose a particular subset of loci to run.</p>
+
+			<p>If the <strong>&ldquo;Ranges</strong>&rdquo; option is chosen, the textbox should contain at least one range of loci, which should consist of two numbers separated by a dash and two spaces. For example, if loci from 20 to 40 (inclusive) are desired, &lsquo;20 &ndash; 40&rsquo; is entered into the adjacent textbox. Several ranges can be entered and should be separated by commas or blanks. It is not necessary to enter ranges in the sequential order, as long as each range is legitimate (i.e., the second number is greater than or equal to the first). A number between 2 dashes is considered an error. A single number is the same as a range of two identical numbers connected by a dash.</p>
+
+			<p>When &ldquo;<strong>Restrict Loci by</strong>&rdquo; is checked, the restriction can be implemented either by specifying the range of loci to be used, or the loci to be removed. Clicking the &ldquo;<strong>?</strong>&rdquo; button next to <strong>&ldquo;Restrict Loci by&rdquo; </strong>will open a dialog box with instructions to correct any error. If textboxes are free from errors, texts in these textboxes will be truncated. For example, if the ranges of loci are entered in a disorganized fashion:</p>
+
+			<p align="center"><strong>8, 1&nbsp; 6,&nbsp; 3&nbsp; 2-9,&nbsp; 5-12,&nbsp; 25,&nbsp; 14-20</strong></p>
+
+			<p>clicking the &ldquo;<strong>?</strong>&rdquo; button will bring the text into a more readable one:</p>
+
+			<p align="center"><strong>1-12,14-20,25</strong></p>
+
+			<p>To clarify, these entries mean the following loci (in the order they are entered) are included:</p>
+
+			<ol style="list-style-type: lower-alpha">
+				<li pbzloc="53">Loci 8, 1, 6, 3</li>
+				<li>Loci from 2 to 9 (inclusive)</li>
+				<li>Loci from 5 to 12 (inclusive)</li>
+				<li>Locus 25</li>
+				<li>Loci from 14 to 20 (inclusive)</li>
+			</ol>
+
+			<p pbzloc="399">We can see that loci cited in (a) are also in (b) except locus 1. Loci cited in (b) and (c) have common loci from 5 to 9, so together, (a) &ndash; (c), we have loci from 1 to 12. This is an extreme example that is unlikely to be entered by the user. It is used to illustrate that the user can enter ranges, loci, without regard to the order or overlapping.</p>
+
+			<h3 pbzloc="403"><a id="UI_Set_Output" name="UI_Set_Output">Setting output file location and name</a></h3>
+
+			<p>Output files will be placed in the same folder as the input file, unless a different location is selected using the <strong>&ldquo;Browse&rdquo;</strong> button.</p>
+
+			<p>The output file name will be the input file name (less extension) plus the abbreviation of that method. For example, if the input file is &ldquo;MyFile.gen&rdquo; and only the linkage disequilibrium method in chosen, the output file will be &ldquo;MyFileLD.txt&rdquo;.</p>
+
+			<p pbzloc="404">Either accept the default output file name, or uncheck &ldquo;<strong>Use Default Name (uncheck to edit)&rdquo;</strong> to type a new file name.</p>
+
+			<p pbzloc="405">The output file and tabular-format output files (see below) can also be appended (i.e. as part of successive analyses on the same input file) by selecting the associated checkbox.</p>
+
+			<h3 pbzloc="409"><a id="UI_Set_Add_Out" name="UI_Set_Add_Out">Selecting additional output files</a></h3>
+
+			<h4 pbzloc="549"><a id="UI_Set_Add_OutBrief" name="UI_Set_Add_OutBrief"><em pbzloc="547">In brief</em></a></h4>
+
+			<p>Additional output files can be selected by checking associated boxes. For example, the user can select output files in tabular format, were each method is reported in a separate output file and is easier to view on screen.</p>
+
+			<h4 pbzloc="775"><a id="UI_Set_Add_OutDetail" name="UI_Set_Add_OutDetail"><em pbzloc="774">More details</em></a></h4>
+
+			<h5 pbzloc="779"><a id="UI_Set_Add_OutDetail1" name="UI_Set_Add_OutDetail1"><u>Selecting critical values</u></a></h5>
+
+			<p pbzloc="181">The user can also define which critical values to include in tabular output files by defining &ldquo;only for the top&rdquo; critical values, again reducing unnecessary output file size. Only one digit can be entered in this textbox. If a positive number m is entered in this box, then the first m critical values in the list, counted from the highest one, will be outputted.&nbsp; If the box is left empty, all critical values (including 0) are outputted.</p>
+
+			<p pbzloc="555">For example, if the values listed in &ldquo;Critical Values&rdquo; panel are 0.05, 0.02, 0.01 and the user selects to include only the top &ldquo;1&rdquo; critical value, then only results calculated with critical value 0.05 (the highest) will be listed in the corresponding files. If the user selects a number greater than the number of critical values listed (in the example,&nbsp; &gt; 3), then results will be listed for all critical values (including 0), the same result that would occur if the textbox were left empty.</p>
+
+			<h5 pbzloc="786"><a id="UI_Set_Add_OutDetail2" name="UI_Set_Add_OutDetail2"><u>Outputs for Burrows coefficients and allele frequencies</u></a></h5>
+
+			<p>There is no limit on the LD output. 100 loci. These optional output files can be very large, so &nbsp;the program only prints results for a maximum of 50 populations.&nbsp; By default the first 50 populations are used, but the user can specify a different number in adjacent text boxes. The user can enter either a single number representing one population or two numbers separated by a dash to indicate the range of populations to be analyzed. Only one range is allowed.</p>
+
+			<p>As for additional output files in tabular format, the user can limit</p>
+
+			<ol>
+				<li>Critical values in the tabular format output files for all methods to be run.</li>
+				<li>Critical values to be imposed on the Burrows output file (ie LD method only).</li>
+			</ol>
+
+			<p>There is no limit of critical values on freq. output file since this file is not very large.</p>
+
+			<h5 pbzloc="792"><a id="UI_Set_Add_OutDetail3" name="UI_Set_Add_OutDetail3"><u>Error warnings</u></a></h5>
+
+			<p>The users are notified if any errors are encountered when <strong>&ldquo;Create Parameter Files&rdquo;</strong> (see below) or <strong>&ldquo;Run Ne&rdquo; </strong>is clicked. An error occurs, for example, if there is no population in the specified range (e.g., if the input file contains only 10 populations, but the user enters &lsquo;12&rsquo; in the textbox for <strong>&ldquo;Population range to run&rdquo;</strong> in the <strong>&ldquo;Options&rdquo;</strong> panel). If the user enters &lsquo;10-12&rsquo; instead, this is not considered an error, but only population 10 will be run.&nbsp; Another type of error occurs if, for example, the user enters &lsquo;3-5&rsquo; in the textbox for <strong>&ldquo;Population range to run&rdquo; </strong>but then enters a different, non-overlapping range (e.g., &lsquo;1-2&rsquo;) in a subsequent textbox (e.g., for an additional output file describing frequency data at each locus.</p>
+
+			<h5 pbzloc="796"><a id="UI_Set_Add_OutDetail4" name="UI_Set_Add_OutDetail4"><u>Default output file names</u></a></h5>
+
+			<p>A default output file name (which cannot be changed) is generated for each additional output file. For output files in tabular format, this consists of the prefix of the output file name (without path name) with an additional letter &ldquo;x&rdquo; and abbreviation of reported analyses, added. For example if the input file name is &ldquo;MyFile.gen&rdquo;, then additional output files in tabular format for the linkage disequilibrium, heterozygote excess and molecular ancestry are &ldquo;MyFileNexLD.txt&rdquo;, &ldquo;MyFileNexHt.txt&rdquo; and &ldquo;MyFileNexCn.txt&rdquo;, respectively (assuming default main output name &ldquo;MyFileNe.txt&rdquo; is in effect).</p>
+
+			<p>Burrow output files containing&nbsp; values for each locus pair and detailed locus information for each population and analysis method are named from the prefix on the input file name combined with an output specific prefix. In the above example generated additional output file names would be &ldquo;MyFileBur.txt&rdquo; and &ldquo;MyFileLoc.txt&rdquo; respectively.</p>
+
+			<h5 pbzloc="800"><a id="UI_Set_Add_OutDetail5" name="UI_Set_Add_OutDetail5"><u>Outputting missing data</u></a></h5>
+
+			<p pbzloc="126">If the input file has missing data, details of the missing data for each population will be reported in a file whose name is taken from the prefix of the input name, and added &quot;NoDat.txt.&quot; For example, if input name is MyFile.gen, then this file is named &quot;MyFileNoDat.txt&quot; and will be placed in the selected Output Directory.</p>
+
+			<h5 pbzloc="804"><a id="UI_Set_Add_OutDetail6" name="UI_Set_Add_OutDetail6"><u>Parameter files</u></a></h5>
+
+			<p pbzloc="182">The user can also choose to <strong>&ldquo;Create Parameter Files&rdquo;</strong> (in the same directory as the .exe) for running from the command line. The preset default names for these files are &ldquo;info&rdquo; and &ldquo;option&rdquo;. A pop-up dialogue will ask the user to confirm before any overwriting of files. The pop-up also provides instructions on how to run Ne Estimator as command line.</p>
+
+			<h2 pbzloc="185"><a id="Running_NeEstimator" name="Running_NeEstimator">Running NeEstimator</a></h2>
+
+			<p>Click <strong>&ldquo;Run NeEstimator&rdquo;</strong> to run the selected analyses. Updates are provided in a box on the screen.</p>
+
+			<p>Computations on large datasets may take time. If no error message is given, and if the update box is still open, it is likely that the program is still running.</p>
+
+			<p>In general, the temporal and heterozygote excess methods will run quickly even with very large files. The LD method slows with large numbers of loci (&gt;&gt;1000), especially for samples that include large numbers of individuals (&gt;100).&nbsp; The molecular coancestry method is very slow for large numbers of loci.&nbsp; Therefore, users with large datasets are encouraged to first try the analyses with reduced sets of loci, individuals or populations before running their full datasets.</p>
+
+			<p pbzloc="186">A message stating &ldquo;Ne is finished running&hellip;&hellip;.&rdquo; notifies user when analyses have finished. If the input file is not in proper format, no output file will be created.</p>
+
+			<h2 pbzloc="189"><a id="Errors" name="Errors">Dealing with errors</a></h2>
+
+			<p>If there are invalid entries in textboxes for temporal generation sets, or in text boxes at the <strong>&ldquo;Options&rdquo;</strong> panel, a dialogue pops up indicating where the errors are located. The user should correct these before clicking the <strong>&ldquo;Run Ne&rdquo;</strong> button. If the user clicks <strong>&ldquo;OK&rdquo; </strong>the analyses will proceed without the options containing errors.</p>
+
+			<p>The software interface will not report errors on the screen after the &ldquo;Run Ne &hellip;&rdquo; is clicked.</p>
+
+			<p pbzloc="82">When the run button is clicked, some internal error checking for consistency takes place, such as the number of loci, populations. Other errors (such as letters instead of digits in the genotypes) will be detected and reported in the missing data files, and the program will cease abruptly.</p>
+
+			<h1 pbzloc="556"><a id="Input" name="Input">Input Data Files</a></h1>
+
+			<h2 pbzloc="560"><a id="InputData_Brief" name="InputData_Brief">In brief</a></h2>
+
+			<p>The software accepts genotypic data in the format used by GENEPOP (<a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_4" title="Morgan, 2000 #2870">Morgan 2000</a>; <a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_11" title="Raymond, 1995 #1506">Raymond &amp; Rousset 1995</a>; <a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_12" title="Rousset, 2008 #3831">Rousset 2008</a>) or FSTAT (<a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_1" title="Goudet, 1995 #4226">Goudet 1995</a>).</p>
+
+			<p pbzloc="561">A test input data file is provided with the downloaded software package.</p>
+
+			<h2 pbzloc="565"><a id="InputData_Details" name="InputData_Details">More Details</a></h2>
+
+			<h3 pbzloc="570"><a id="ID_GeneticMarker" name="ID_GeneticMarker">Types of genetic marker data</a></h3>
+
+			<p pbzloc="571">The software produces estimates of&nbsp;<em>N<sub>e</sub></em>&nbsp;from individual genotypes at diploid nuclear loci, such as microsatellites and SNPs.</p>
+
+			<h3 pbzloc="575"><a id="ID_ExampleInputFile" name="ID_ExampleInputFile">Example data input file</a></h3>
+
+			<p pbzloc="576">Test datafiles (8Ne50.dat and 8Ne50.gen) with eight samples is provided with the software download. It was generated in Easypop using a procedure similar to that used for the temporal comparisons described in the Program Note.&nbsp; A metapopulation with eight subpopulations was simulated and genetic data were tracked for 20 msat loci.&nbsp; Each subpopulation was randomly mating with Ne = 50.&nbsp; Initially, migration rate was at a level (m = 0.875) that caused the entire metapopulation to be panmictic.&nbsp; Five generations before collecting samples, all migration was stopped, so the subpopulations became isolated.&nbsp; The single-sample methods should therefore estimate an Ne of ~ 50, with perhaps a bit of upward bias for the LD method due to effects of the larger Ne in recent generations.&nbsp; Any pair of samples is separated by 10 generations of drift (five in each lineage).&nbsp; Therefore, temporal estimates for any pair of samples using t = 10 should also approximately be equal to 50.&nbsp; Random variation in rates of drift and sampling error of course will influence the distribution of the estimates as well.</p>
+
+			<h3 pbzloc="580"><a id="ID_InputDataFormat" name="ID_InputDataFormat">Input data format</a></h3>
+
+			<p>Input data must be in either GENEPOP or FSTAT format. Alleles should be described by one to five digits. The program can handle more digits than three, but that is the max used by GENEPOP.</p>
+
+			<p>For the single-sample methods (linkage disequilibrium, heterozygote-excess, molecular co-ancestry), populations are represented as single samples (collections of individuals that will be analysed as a group). A single input data file can include data from an arbitrarily large number of populations, just as in a typical GENEPOP or FSTAT file (details on these file formats given below).</p>
+
+			<p>For the two-sample (temporal) method, populations must contain at least two samples or groups, and like the above method, multiple populations can be included in a single file. Format of the input file is the same as for single-sample methods; however, if the temporal method is chosen, the user must indicate both the number of samples from each population, as well as the corresponding generations to be analysed (see <strong>&ldquo;Methods&rdquo; panel</strong>).</p>
+
+			<p>If both single-sample methods and temporal methods are run on the same input file, the single- sample methods treat each sample as a &lsquo;population&rsquo;, while the temporal method analyses the data as described above.</p>
+
+			<p pbzloc="581">The format of the data file can be checked for compatibility before analysis. Select the data file and click on &lsquo;<strong>Info</strong>&rsquo;. If the data are not in the correct format, a message will appear.</p>
+
+			<h3 pbzloc="585"><a id="ID_GENEPOP" name="ID_GENEPOP">GENEPOP data format</a></h3>
+
+			<p pbzloc="586">This data format is the same as that used by the program GENEPOP.&nbsp; In this format, the first row can contain any characters and is often used as a title row or to store information about the data. The subsequent lines contain the names of each locus analysed. Multiple loci can also be stated on the one line separated by commas. The first data column can be the individual&rsquo;s label, followed by columns for each locus. The per-locus genotypes are given as single numbers (i.e. no space between the allele values).&nbsp; For example, the number 100200 denotes the allele values 100 and 200 at this locus.&nbsp; The data must be diploid (that is, there are two allele values per locus for each individual). Genotypes for each locus are separated by one or more blank spaces. Populations are separated by &lsquo;pop&rsquo;. GENEPOP input data files should have the extension &lsquo;.gen&rsquo;.</p>
+
+			<p>Below is an example of data formatted in this manner.</p>
+
+			<p pbzloc="587"><strong>EXAMPLE:</strong></p>
+
+			<p>Test data file</p>
+
+			<p>Loci1</p>
+
+			<p>Loci2</p>
+
+			<p>Loci3</p>
+
+			<p>pop</p>
+
+			<p>Ind1,&nbsp;&nbsp;&nbsp; 1111&nbsp;&nbsp;&nbsp; 2124&nbsp;&nbsp;&nbsp; 3232</p>
+
+			<p>Ind2,&nbsp;&nbsp;&nbsp; 1113&nbsp;&nbsp;&nbsp; 2727&nbsp;&nbsp;&nbsp; 3538</p>
+
+			<p>Ind3,&nbsp;&nbsp;&nbsp; 1315&nbsp;&nbsp;&nbsp; 0000&nbsp;&nbsp;&nbsp; 3838</p>
+
+			<p>Ind4,&nbsp;&nbsp;&nbsp; 1313&nbsp;&nbsp;&nbsp; 2127&nbsp;&nbsp;&nbsp; 3238</p>
+
+			<p>The header line contains the title for the file.</p>
+
+			<p>The example data set has three loci and four individuals.&nbsp; Each allele value is, in this case, two characters (digits) long.&nbsp; The first locus has allele values of 11, 13 and 15.&nbsp; The second locus has allele values of 21, 24 and 27.&nbsp; The third locus has allele values of 32, 35 and 38.&nbsp; Each locus has homozygous and heterozygous values.&nbsp; &ldquo;1111&rdquo; is homozygous as both allele values are 11.&nbsp; &ldquo;3238&rdquo; is heterozygous as the first allele value is 32 and the second is 38.</p>
+
+			<p pbzloc="589">Each row begins with a label for the individual whose data is contained on that row.&nbsp; There is one missing data value, denoted by &ldquo;0000&rdquo;.&nbsp; That is, the allele values (both first and second) could not be ascertained for the third individual at the second locus.</p>
+
+			<h3 pbzloc="593"><a id="ID_FSTAT" name="ID_FSTAT">FSTAT data format</a></h3>
+
+			<p>In this format, the genotypic data are similarly represented; however, the first column indicates the population number for each individual and is not followed by a comma. The word &lsquo;pop&rsquo; is not used between populations.</p>
+
+			<p><strong>EXAMPLE:</strong></p>
+
+			<p>10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2</p>
+
+			<p>loc-1</p>
+
+			<p>loc-2</p>
+
+			<p pbzloc="594">loc-3</p>
+
+			<p>loc-4</p>
+
+			<p>loc-5</p>
+
+			<p>&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0110&nbsp;&nbsp;&nbsp; 0807&nbsp;&nbsp;&nbsp; 0902&nbsp;&nbsp;&nbsp; 0901&nbsp;&nbsp;&nbsp; 0101</p>
+
+			<p>&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1003&nbsp;&nbsp;&nbsp; 0808&nbsp;&nbsp;&nbsp; 0701&nbsp;&nbsp;&nbsp; 0908&nbsp;&nbsp;&nbsp; 0907</p>
+
+			<p>&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0605&nbsp;&nbsp;&nbsp; 0808&nbsp;&nbsp;&nbsp; 0209&nbsp;&nbsp;&nbsp; 0107&nbsp;&nbsp;&nbsp; 0808</p>
+
+			<p>&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0305&nbsp;&nbsp;&nbsp; 0808&nbsp;&nbsp;&nbsp; 0102&nbsp;&nbsp;&nbsp; 0107&nbsp;&nbsp;&nbsp; 0108</p>
+
+			<p>&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0503&nbsp;&nbsp;&nbsp; 0108&nbsp;&nbsp;&nbsp; 0103&nbsp;&nbsp;&nbsp; 0902&nbsp;&nbsp;&nbsp; 0807</p>
+
+			<p>&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0510&nbsp;&nbsp;&nbsp; 0607&nbsp;&nbsp;&nbsp; 0110&nbsp;&nbsp;&nbsp; 0903&nbsp;&nbsp;&nbsp; 0107</p>
+
+			<p>The header row must include</p>
+
+			<ol pbzloc="595">
+				<li>The number of populations (=10)</li>
+				<li>The number of loci (=5),</li>
+				<li>The maximum value for allele designation (=10),</li>
+				<li>Number of digits used to describe each allele (=2).</li>
+			</ol>
+
+			<h3 pbzloc="597"><a id="ID_MISSING" name="ID_MISSING">Missing values</a></h3>
+
+			<p>Input data can include missing allelic determinations (00 for one-digit alleles, 0000 for 2-digit alleles, or 000000 for 3-digit alleles). No other states for missing data (eg XX, ??) are permitted. The program will accept one allele scored and the other not (i.e. 0012) however, this partially scored genotype will be considered as missing data, same as 0000.</p>
+
+			<p>Missing data, which occur in virtually every real dataset, present a thorny issue for population genetic analyses because the sample size of individuals varies across loci, and this requires careful consideration to determine the best way to minimize bias and maximize precision. &nbsp;This applies most directly to the moment-based linkage disequilibrium and temporal methods, where the expected contribution to <em>F</em> or&nbsp;&nbsp;<img chromakey="white" src="Images\rhat.png" />&nbsp; &nbsp;from sampling error is subtracted to get an adjusted value before calculating <em>N<sub>e</sub></em>.</p>
+
+			<p pbzloc="598">Based on findings from a simulation study (<a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_8" title="Peel, 2013 #4799">Peel<em> et al.</em> 2013</a>), the software implements a fixed-inverse variance-weighted harmonic mean correction for missing data for the linkage disequilibrium and temporal methods (refer to methodological outlines below).</p>
+
+			<p>The new method for correcting for missing data calculates&nbsp;&nbsp;<img chromakey="white" src="Images/Nbhat.png" />&nbsp;&nbsp;or <img chromakey="white" src="Images\NeHat.png" />&nbsp;&nbsp;for each locus or locus pair (using the sample size for that locus) and then computes a weighted harmonic mean effective size across all loci, with weights proportional to the number of independent comparisons.&nbsp; If sample size is identical across loci, this should produce a result identical to previous methods (<a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_16" title="Waples, 2008 #3843">eg Waples &amp; Do 2008</a>).</p>
+
+			<p pbzloc="113">When the amount of missing data varies across loci, the new method seems less prone to bias, since each single-locus or locus-pair estimate is in theory an unbiased estimate of the same parameter. The new method outperformed the simple weighted mean that was implemented to correct for presence of missing data in version 1.3 of NeEstimator (<a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_7" title="Ovenden, 2007 #3621">Ovenden<em> et al.</em> 2007</a>), as well as a simpler version of the inverse-variance method implemented in LDNe (<a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_16" title="Waples, 2008 #3843">Waples &amp; Do 2008</a>).</p>
+
+			<h1 pbzloc="861"><a id="Output" name="Output" pbzloc="859">Output Data Files</a></h1>
+
+			<h2 pbzloc="865"><a id="OP_Brief" name="OP_Brief">In brief</a></h2>
+
+			<p>Once the analysis has successfully run, the output files will appear in the same directory as the input files unless otherwise defined (refer <strong>&ldquo;Output&rdquo; panel</strong>).</p>
+
+			<p pbzloc="866">The output files are presented in text format. Refer to &ldquo;<strong>Output&rdquo; panel</strong> for description of names for output files.</p>
+
+			<h2 pbzloc="870"><a id="OP_Content" name="OP_Content">More details on the content of output files</a></h2>
+
+			<p>Output files begin with a header description containing the file title, starting time of analysis and input file name. The number of loci included in the analyses is also stated and any loci removed or dropped, or population subsamples as defined by the user in the<strong> &ldquo;Options panel&rdquo;</strong></p>
+
+			<p>If both single and two-sample methods are selected, single-sample results are presented first. For these results, each population is presented in consecutive tables organized by selected analysis methods. The population name and number of individuals sampled is reported. Rows represent parameters <i>N<sub>e</sub></i> estimates and confidence intervals (unless the user has selected not to report intervals).</p>
+
+			<p>Results for each Pcrit value defined in the <strong>&ldquo;Critical Values&rdquo;</strong> <strong>panel</strong> prior to analysis are reported in the columns (&ldquo;0 +&rdquo; uses all alleles regardless of frequency).</p>
+
+			<p pbzloc="876">For two-sample methods, the term &ldquo;population&rdquo; refers to samples (temporal replicates taken from a single population). As such, &ldquo;population 1/2&rdquo; reported in an output file actually refers to two generations (defined by the user) sampled within the same population. These are defined at the top of the results table.</p>
+
+			<p>For example, &ldquo;Samples 1 [1] &amp; 2 [2]&rdquo; followed by &ldquo;Generations 0.0 &amp; 1.5&rdquo; refers to the comparison of two samples. The numerals without being enclosed in square brackets are the order of the samples taken at different generations for a particular population. The numbers enclosed in the brackets are the identities of the samples in the input file (where only the last few characters are shown). In this example, it happens that these identities are given in numerals too. In general, these identities may be strings of letters and numerals. In this example, sample 1 is population 1 from the input file and the second sample is population 2 from the input file, representing generations 0.0 and 1.5 (defined by the user) sampled from the same population.</p>
+
+			<p pbzloc="871">A title line states the number of samples and sample sizes analysed, followed by a table organized by the <em>F</em>-statistic (Pollak, Nei/Tajima, Jorde/Ryman) calculated. Again, columns represent parameters, <i>N&gt;sub&gt;e</i> estimates and confidence intervals (unless the user has selected not to report intervals) for each Pcrit value as described above.</p>
+
+			<h2 pbzloc="875"><a id="OP_Add" name="OP_Add">More details on the content of additional output files</a></h2>
+
+			<p>If the user has selected additional output files, these will appear in the same directory as the above output file.</p>
+
+			<p>If <strong>&ldquo;Output Files in tabular format&rdquo; </strong>is selected, each analysis method will be reported in a separate file, reducing overall file size. In these files, the results tables are presented differently than in the generic output file described above. Here, each column represents sample pair, generations, method parameters (Pollak, PK; Nei and Tajima, NT; and Jorde and Ryman, JR),&nbsp;<em>N<sub>e</sub></em>&nbsp;estimates and confidence intervals (unless the user has selected not to report intervals). Results for each Pcrit value are reported in the rows.</p>
+
+			<p><strong>&ldquo;Output file for Burrows coefficient in linkage disequilibrium method&rdquo; </strong>reports loci-specific frequency data and parameter estimates for each population in consecutive tables organized by Pcrit values.</p>
+
+			<p>&ldquo;<strong>Output file for Frequency Data at each locus&rdquo;</strong> again reports each population separately. Specific allelic diversities for each locus within a population are described first. Details of the number of alleles and individuals sampled at each locus and correspondingly locus-specific linkage disequilibrium and heterozygote-excess data for each Pcrit value follow.</p>
+
+			<p pbzloc="877">And lastly, locus-specific frequency and parameter estimates for the molecular co-ancestry method are reported.</p>
+
+			<h2 pbzloc="883"><a id="OP_CI" name="OP_CI">More details on confidence intervals</a></h2>
+
+			<h3 pbzloc="885"><a id="OP_CI_Types" name="OP_CI_Types">Types of confidence intervals</a></h3>
+
+			<p pbzloc="882">Confidence intervals (CI&rsquo;s) are provided for all methods. For the linkage disequilibrium and temporal method, parametric confidence intervals are based on the chi-square approximation described in Waples (1989) (<a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_13" title="Waples, 1989 #2233">temporal, Waples</a>) and Waples (2006) (<a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_15" title="Waples, 2006 #3720">linkage disequilibrium, Waples</a>). We also provide a type of parametric confidence interval for the heterozygote-excess method, which is mentioned briefly in Zhdanova &amp; Pudovkin (<a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_19" title="Zhdanova, 2008 #3892">2008</a>).</p>
+
+			<p pbzloc="886">Jacknife estimates of confidence intervals are also presented for the temporal and linkage disequilibrium (<a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_16" title="Waples, 2008 #3843">Waples &amp; Do 2008</a>) methods and were developed here specifically for the molecular co-ancestry method. In future versions, it might be possible to implement jacknikfe CIs for the heterozygote-excess method.</p>
+
+			<h3 pbzloc="12"><a id="OP_CI_Types_para" name="OP_CI_Types_para" pbzloc="11">Parametric compared to non-parametric confidence intervals</a></h3>
+
+			<p>Users should note the difference between confidence intervals around&nbsp;<em>N<sub>e</sub></em>&nbsp;estimates estimated using the chi-square (i.e. parametric) or the jackknife (i.e. non-parametric) method.</p>
+
+			<p>The chi-square method is the standard way of calculating confidence intervals based on the theoretical distribution of &nbsp;&nbsp;<img chromakey="white" src="fil2\clip_image001.png" />&nbsp; or <img chromakey="white" src="file:///C:\Users\pee032\AppData\Local\Temp\OICE_DAB9E332-0F23-4672-A119-80BDFACBCC2C.0\msohtmlclip1\01\clip_image001.png" />&nbsp;, but their use with the LD method is complicated by the fact that not all locus pairs are independent since they involve overlapping sets of loci, and there is no general way to quantitatively account for this by adjusting the degrees of freedom.</p>
+
+			<p>Jackknife confidence intervals attempt to estimate the actual variance among loci (or pairs of loci) and are generally narrower than chi-square confidence intervals.</p>
+
+			<p pbzloc="891">The software outputs both types of confidence intervals and allows the user to make the decision between methods. As the number of loci becomes very large, the jackknife CIs for the LD become computationally intensive and converge on the parametric CIs.&nbsp; For this reason, jackknife CIs for the LD method are not reported if the number of loci exceeds 1000.</p>
+
+			<h3 pbzloc="895"><a id="OP_CI_Jack" name="OP_CI_Jack">Jackknifed confidence intervals</a></h3>
+
+			<p pbzloc="897">The software takes a parsimonious approach to calculating jackknife confidence intervals on linkage disequilibrium estimates in the presence of missing data. Jackknife CI&rsquo;s are calculated by dropping one locus or locus pair and repeating the previous step many times; however, the same starting estimate of <img chromakey="white" src="file:///C:\Users\pee032\AppData\Local\Temp\OICE_DAB9E332-0F23-4672-A119-80BDFACBCC2C.0\msohtmlclip1\01\clip_image001.png" />&nbsp;is used each time. Theoretically, the starting estimate of <img chromakey="white" src="file:///C:\Users\pee032\AppData\Local\Temp\OICE_DAB9E332-0F23-4672-A119-80BDFACBCC2C.0\msohtmlclip1\01\clip_image001.png" />&nbsp;should also be recalculated each time with the appropriate locus or locus-pair dropped. But, this is not done due to the computing time required, particularly for large numbers of loci.</p>
+
+			<h3 pbzloc="901"><a id="OP_CI_Linkage" name="OP_CI_Linkage">Physical linkage between loci</a></h3>
+
+			<p pbzloc="903">Confidence intervals for all methods assume that the loci assort independently. If some pairs of loci are physically linked, the data contain less information than assumed and the confidence intervals will have a tendency to be too narrow. Physically linked loci would in general also downwardly bias estimates of Ne from the LD method. The consequences of these departures from the assumption of independent assortment have not been rigorously evaluated, but doing so will become increasingly important as the number of loci rapidly increases.</p>
+
+			<h2 pbzloc="907"><a id="NegInf" name="NegInf">Negative or infinite estimates of Ne</a></h2>
+
+			<p>Each method estimates <em>N<sub>e</sub></em> based on the magnitude of a genetic characteristic, after accounting for the expected contribution from random errors in sampling. For example, in the temporal and linkage disequilibrium methods, the contribution to <img src="file:///C:\Users\pee032\AppData\Local\Temp\OICE_DAB9E332-0F23-4672-A119-80BDFACBCC2C.0\msohtmlclip1\01\clip_image011.wmz" />&nbsp;or <img src="file:///C:\Users\pee032\AppData\Local\Temp\OICE_DAB9E332-0F23-4672-A119-80BDFACBCC2C.0\msohtmlclip1\01\clip_image012.wmz" />expected to arise from sampling <em>S</em> individuals is approximately <em>1/S</em>.&nbsp; To obtain an unbiased estimate of the genetic index, this amount attributed to sampling is subtracted from the raw estimate.&nbsp; Because the actual contribution of sampling error is a random variable, it can be smaller than the expected value, and when that happens subtracting the expected contribution can produce a negative estimate of adjusted <em><img src="file:///C:\Users\pee032\AppData\Local\Temp\OICE_DAB9E332-0F23-4672-A119-80BDFACBCC2C.0\msohtmlclip1\01\clip_image013.wmz" />&nbsp;or <img src="file:///C:\Users\pee032\AppData\Local\Temp\OICE_DAB9E332-0F23-4672-A119-80BDFACBCC2C.0\msohtmlclip1\01\clip_image014.wmz" /></em>, which in turn produces a negative estimate of <em>N<sub>e</sub></em>.&nbsp; This also can occur with unbiased estimators of <em>F<sub>ST</sub></em> or genetic distance.</p>
+
+			<p pbzloc="908">The usual interpretation in this case is that the estimate of <em>N<sub>e</sub></em> is infinity &ndash; that is, there is no evidence for variation in the genetic characteristic caused by genetic drift due to a finite number of parents &mdash; it can all be explained by sampling error.</p>
+
+			<p>In the confidence intervals (CIs), such values are reported as &lsquo;Infinite,&rsquo; meaning that the confidence interval includes infinity. However, the point estimates of <em>N<sub>e</sub></em> are reported even if they are negative (in accessory output files), as in some applications this information can be useful.</p>
+
+			<p>For example, say you have several replicate samples from the same population and use each sample to estimate <em>N<sub>e</sub></em>. An overall estimate of <em>N<sub>e</sub></em> can be obtained by taking the harmonic mean of the separate estimates, even if they are negative. You will get an approximately, but not exactly, correct answer if you replace negative estimates of <em>N<sub>e</sub></em> with infinity before taking a harmonic mean.&nbsp; This issue is discussed in Waples and Do (<a href="file:///C:/Program%20Files/PageBreeze/ck/PB/x_pb.htm#_ENREF_17" title="Waples, 2010 #4018">2010</a>).</p>
+
+			<h1 pbzloc="914"><a id="Command_Line" name="Command_Line" pbzloc="910">Running NeEstimator V2 from the Command Line</a></h1>
+
+			<h2 pbzloc="918"><a id="Command_Line_Brief" name="Command_Line_Brief">In brief</a></h2>
+
+			<p pbzloc="919">The command line provides computer-savvy users with an alternate way of running the software.</p>
+
+			<h2 pbzloc="923"><a id="Command_Line_Details" name="Command_Line_Details">More details</a></h2>
+
+			<h3 pbzloc="1042"><a id="Command_Para" name="Command_Para" pbzloc="1040">Parameter files</a></h3>
+
+			<p>This section explains the correspondence between inputs from textboxes on the GUI interface and inputs into parameter files. The <strong>&ldquo;Create Parameter Files&rdquo;</strong> button enables the user to create parameter files describing the analyses defined in the GUI interface.</p>
+
+			<p>Parameter files will be created in the folder of the GUI, and named <strong>&ldquo;info&rdquo;</strong> and <strong>&ldquo;option&rdquo;. </strong>The <strong>&ldquo;option&rdquo;</strong> file will be created or overwritten if certain options in the GUI are selected. The dialog box that pops up when the button is clicked includes instructions for running in the command line. The menu item <strong>&ldquo;Open Terminal for Command&rdquo;</strong> in <strong>&ldquo;Run&rdquo;</strong> menu will launch a terminal for the user to type in command line as instructed by the dialog box.</p>
+
+			<p pbzloc="924">Analysis parameters defined in the <strong>&ldquo;Input&rdquo;,</strong> <strong>&ldquo;Methods&rdquo;</strong>, <strong>&ldquo;Pcrit&rdquo;</strong> and <strong>&ldquo;Output&rdquo;</strong> panels of the GUI interface are described in the <strong>&ldquo;info&rdquo;</strong> file. Whereas parameters defined in the <strong>&ldquo;option&rdquo;</strong> and <strong>&ldquo;Additional output files&rdquo;</strong> panels are described in the <strong>&ldquo;Options&rdquo;</strong> file.</p>
+
+			<p>Instructions explaining each line are also included in the files.</p>
+
+			<p>Experienced users can directly modify the parameter files as required and run the analyses using command line instead of the GUI interface.</p>
+
+			<h3 pbzloc="1046"><a id="Command_Mult" name="Command_Mult" pbzloc="1044">Running multiple input files</a></h3>
+
+			<p>There are two analysis modes depending on the need of the users, corresponding to separate batch files. Examples of these batch files (&ldquo;<strong>multi.txt</strong>&rdquo; and &ldquo;<strong>multiplus.txt</strong>&rdquo;) are included in the downloaded .zip package. These text files start with a few examples, then at the end, detailed instructions. These files can be used as templates.</p>
+
+			<p pbzloc="1047">The simple mode (e.g. &ldquo;multi.txt&rdquo;) allows users limited analysis options. For each of the multiple analyses in the batch file, the user defines:</p>
+
+			<ul>
+				<li>Any or all methods.</li>
+				<li>Critical values.</li>
+				<li>Only one plan (I or II), and one generation set for temporal methods to apply throughout each input file (unlike in the GUI interface).</li>
+				<li>Only main output file (no tabular-format file).</li>
+			</ul>
+
+			<p>The enhanced mode (e.g. &ldquo;multiplus.txt&rdquo;) adds more options. However, again, only one generation and one sampling strategy i.e. Plan I or Plan II can be entered for each input file. Also, no Burrow coefficients or Frequency Data output files are generated due to excessive file size. Additional options allow users to:</p>
+
+			<ul>
+				<li>Add tabular-format file for any or all methods specified to run.</li>
+				<li>Restrict number of individuals per population.</li>
+				<li>Restrict populations by specifying a range.</li>
+				<li>Specify if Parametric or Non-parametric Confidence Intervals are desired.</li>
+				<li>Specify Random mating or Monogamy model in LD method.</li>
+				<li>Omit loci.</li>
+			</ul>
+
+			<p>Output files for both modes can be set to be appended, including tabular-format files in preferred mode. Suppose batch files are &ldquo;multi.txt&rdquo; for the basic mode and &ldquo;multiplus.txt&rdquo; for the preferred mode, then the following command lines should be issued (assuming the user already opens a command shell at the directory where all files are located):</p>
+
+			<ol style="list-style-type: lower-alpha">
+				<li>Simple mode:</li>
+			</ol>
+
+			<p style="margin-left: 36pt"><strong>Windows</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Ne2&nbsp; m:multi.txt</strong></p>
+
+			<p style="margin-left: 36pt"><strong>Mac:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ./Ne2M&nbsp; m:multi.txt</strong></p>
+
+			<p style="margin-left: 36pt"><strong>Linux&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ./Ne2L&nbsp; m:multi.txt</strong></p>
+
+			<ol style="list-style-type: lower-alpha">
+				<li value="2">Enhanced mode:</li>
+			</ol>
+
+			<p style="margin-left: 36pt"><strong>Windows</strong>:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <strong>Ne2&nbsp; m+:multiplus.txt</strong></p>
+
+			<p style="margin-left: 36pt"><strong>Mac:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ./Ne2M&nbsp; m+:multiplus.txt</strong></p>
+
+			<p style="margin-left: 36pt"><strong>Linux&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ./Ne2L&nbsp; m+:multiplus.txt</strong></p>
+
+			<p>Note that there is a plus sign before the colon in preferred mode.</p>
+
+			<p>The user should have the executable (Ne2 in Windows, Ne2M in Mac, and Ne2L in Linux), all input files to run, and a batch file in the same directory.</p>
+
+			<p>Other modes may be added in future versions (running multiple files with same settings).</p>
+
+			<h1 pbzloc="139"><a id="Acknowledgements" name="Acknowledgements" pbzloc="138">Acknowledgements</a></h1>
+
+			<p>We thank Per Erik Jorde, Tetsuro Nomua, Alexander Pudovkin, and Oxana Zhadanova for reviewing and confirming the accuracy of implementations of their methods. We also are indebted to our cadre of BetaTesters, who diligently evaluated earlier versions of the software and provided valuable comments and feedback (Tiago Ant&atilde;o, Dean Blower, Mark Christie, Christine Dudgeon, Jon Hesse, Wes Larson, Friso Palstra, Ivan Phillipsen, Malin Pinsky, and Ryan Waples).</p>
+
+			<h1><a id="References" name="References">References</a></h1>
+
+			<p style="margin-left: 36pt"><a id="Goudet1995" name="Goudet1995">Goudet J (1995) FSTAT (Version 1.2): a computer program to calculate F-statistics. <em>Journal of Heredity</em> <strong>86</strong>, 485-486.</a></p>
+
+			<p style="margin-left: 36pt"><a id="Hill1981" name="Hill1981">Hill WG (1981) Estimation of effective population size from data on linkage disequilibrium. <em>Genetical Research Cambridge</em> <strong>38</strong>, 209-216.</a></p>
+
+			<p style="margin-left: 36pt"><a id="Jorde2007" name="Jorde2007">Jorde PE, Ryman N (2007) Unbiased estimator for genetic drift and effective population size. <em>Genetics</em> <strong>177</strong>, 927-935.</a></p>
+
+			<p style="margin-left: 36pt"><a id="Morgan2000" name="Morgan2000">Morgan E (2000) Genepop on the web. Curtin University of Technology, Perth, Australia.</a></p>
+
+			<p style="margin-left: 36pt"><a id="Nei1981" name="Nei1981">Nei M, Tajima F (1981) Genetic drift and estimation of effective population size. <em>Genetics</em> <strong>1981</strong>, 625-640.</a></p>
+
+			<p style="margin-left: 36pt"><a id="Nomura2008" name="Nomura2008">Nomura T (2008) Estimation of effective number of breeders from molecular coancestry of single cohort sample. <em>Evolutionary Applications</em> <strong>1</strong>, 462-474.</a></p>
+
+			<p style="margin-left: 36pt"><a id="Ovenden2007" name="Ovenden2007">Ovenden J, Peel D, Street R<em>, et al.</em> (2007) The genetic effective and adult census size of an Australian population of tiger prawns (<em>Penaeus esculentus</em>). <em>Molecular Ecology</em> <strong>16</strong>, 127-138.</a></p>
+
+			<p style="margin-left: 36pt"><a id="Peel2013" name="Peel2013">Peel D, Waples RS, Macbeth GM, Do C, Ovenden JR (2013) Accounting for missing data in the estimation of contemporary genetic effective population size (Ne). <em>Molecular Ecology Resources</em> <strong>13</strong>, 243-253.</a></p>
+
+			<p style="margin-left: 36pt"><a id="Pollak1983" name="Pollak1983">Pollak E (1983) A new method for estimating the effective population size from allele frequency changes. <em>Genetics</em> <strong>104</strong>, 531-548.</a></p>
+
+			<p style="margin-left: 36pt"><a id="Pudovkin1996" name="Pudovkin1996">Pudovkin AI, Zaykin DV, Hedgecock D (1996) On the potential for estimating the effective number of breeders from heterozygote excess in progeny. <em>Genetics</em> <strong>144</strong>, 383-387.</a></p>
+
+			<p style="margin-left: 36pt"><a id="Raymond1995" name="Raymond1995">Raymond M, Rousset F (1995) GENEPOP (version 1.2): population genetics software for exact tests and ecumenicism. <em>Journal of Heredity</em> <strong>86</strong>, 248-249.</a></p>
+
+			<p style="margin-left: 36pt"><a id="Rousset2008" name="Rousset2008">Rousset F (2008) Genepop 007: a complete re-implementation of the genepop software for Windows and Linux. <em>Molecular Ecology Resources</em> <strong>8</strong>, 103-106.</a></p>
+
+			<p style="margin-left: 36pt"><a id="Waples1989" name="Waples1989">Waples RS (1989) A generalized approach for estimating effective population size from temporal changes in allele frequency. <em>Genetics.</em> <strong>121</strong>, 379-391.</a></p>
+
+			<p style="margin-left: 36pt"><a id="Waples2005" name="Waples2005">Waples RS (2005) Genetic estimates of contemporary effective population size: to what time periods do the estimates apply? <em>Molecular Ecology</em> <strong>14</strong>, 3335-3352.</a></p>
+
+			<p style="margin-left: 36pt"><a id="Waples2006" name="Waples2006">Waples RS (2006) A bias correction for estimates of effective population size based on linkage disequilibrium at unlinked gene loci. <em>Conservation Genetics</em> <strong>7</strong>, 167-184.</a></p>
+
+			<p style="margin-left: 36pt"><a id="Waples2008" name="Waples2008">Waples RS, Do C (2008) LDNE: a program for estimating effective population size from data on linkage disequilibrium. <em>Molecular Ecology Resources</em> <strong>8</strong>, 753-756.</a></p>
+
+			<p style="margin-left: 36pt"><a id="Waples2010" name="Waples2010">Waples RS, Do C (2010) Linkage disequilibrium estimates of contemporary Ne using highly variable genetic markers: a largely untapped resource for applied conservation and evolution. <em>Evolutionary Applications</em> <strong>3</strong>, 244-262.</a></p>
+
+			<p style="margin-left: 36pt"><a id="Weir1980" name="Weir1980">Weir BS, Hill WG (1980) Effect of mating structure on variation in linkage disequilibrium. <em>Genetics</em> <strong>95</strong>, 477-488.</a></p>
+
+			<p style="margin-left: 36pt"><a id="Zhdanova2008" name="Zhdanova2008">Zhdanova O, Pudovkin AI (2008) Nb_HetEx: A Program to Estimate the Effective Number of Breeders. <em>Journal of Heredity</em> <strong>99</strong>, 694-695.</a></p>
+
+			<p pbzloc="184">&nbsp;<strong><strong pbzloc="189">&nbsp;</strong></strong></p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p pbzloc="41">&nbsp;</p>
+
+<p pbzloc="73">&nbsp;</p>
+</body>
+</html>
+<tr>
+</tr>
+<tr>
+	<td>&nbsp;</td>
+</tr>
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>&nbsp;</p>
