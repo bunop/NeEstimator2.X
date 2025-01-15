@@ -56,3 +56,7 @@ dkms.conf
 test_Ne.txt
 test_NexLD.txt
 test_genepopNoDat.txt
+
+# Other binary files for GUI
+*.jar
+Ne2L
