@@ -1,0 +1,10 @@
+1  0  1  1  * First number = sum of method(s) to have extra output: LD(=1), Het(=2), Coan(=4), Temporal(=8)
+0           * Maximum individuals/pop. If 0: no limit
+0           * First entry n1 = 0: No Freq output. If n1 = -1: Freq. output up to population 50. Two entries n1, n2 with n1 <= n2: Freq output for populations from n1 to n2. Max. populations to have Freq output is set at 50
+0           * For Burrow output file (up to 50 populations can have output). See remark below
+1           * Parameter CI: 1 for Yes, 0 for No
+1           * Jackknife CI: 1 for Yes, 0 for No
+0           * Up to population, or range of populations to run (if 2 entries). If first entry = 0: no restriction
+0           * All loci are accepted
+1           * Enter 1: A file is created to document missing data if there are any in input file. Enter 0: no file created
+0           * Line for chromosomes/loci option and file
