@@ -28,3 +28,4 @@ build/built-jar.properties
 
 # ignore compiled folders
 dist/
+build/
