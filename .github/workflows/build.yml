@@ -29,8 +29,11 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install gcc
 
-      - name: Build
+      - name: Build C program
         run: make
+
+      - name: Build Java program
+        run: ant -f NeEstimator2x/build.xml
 
       - name: Rename binary
         run: |
@@ -52,6 +55,7 @@ jobs:
             Ne2L
             Ne2.exe
             Ne2M
+            NeEstimator2x/dist/*.jar
 
       - name: Publish
         if: github.ref == 'refs/heads/master'
