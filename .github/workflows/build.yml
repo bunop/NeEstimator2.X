@@ -5,6 +5,8 @@ on:
     branches:
       - devel
       - master
+    tags:
+      - 'v*'
 
 jobs:
   build:
@@ -15,7 +17,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up compiler on Linux
         if: runner.os == 'Linux'
@@ -57,10 +59,34 @@ jobs:
             Ne2M
             NeEstimator2x/dist/*.jar
 
-      - name: Publish
-        if: github.ref == 'refs/heads/master'
-        run: |
-          mkdir -p release
-          cp Ne2x release/
-          # Aggiungere qui il comando per pubblicare i binari, ad esempio usando GitHub Releases
-          # Esempio: gh release create v1.0.0 release/Ne2x --title "Release v1.0.0" --notes "First release"
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: Ne2x-ubuntu-latest
+          path: release/
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: Ne2x-windows-latest
+          path: release/
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: Ne2x-macos-latest
+          path: release/
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
