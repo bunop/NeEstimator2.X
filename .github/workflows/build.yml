@@ -1,0 +1,39 @@
+name: Build and Publish
+
+on:
+  push:
+    branches:
+      - devel
+      - master
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up compiler
+        run: |
+          if [[ "${{ runner.os }}" == "Linux" ]]; then
+            sudo apt-get install gcc
+          elif [[ "${{ runner.os }}" == "Windows" ]]; then
+            choco install mingw
+          elif [[ "${{ runner.os }}" == "macOS" ]]; then
+            brew install gcc
+          fi
+
+      - name: Build
+        run: make
+
+      - name: Publish
+        if: github.ref == 'refs/heads/master'
+        run: |
+          mkdir -p release
+          cp Ne2x release/
+          # Aggiungere qui il comando per pubblicare i binari, ad esempio usando GitHub Releases
+          # Esempio: gh release create v1.0.0 release/Ne2x --title "Release v1.0.0" --notes "First release"
