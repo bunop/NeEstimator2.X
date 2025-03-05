@@ -1,0 +1,92 @@
+name: Build and Publish
+
+on:
+  push:
+    branches:
+      - devel
+      - master
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up compiler on Linux
+        if: runner.os == 'Linux'
+        run: sudo apt-get install -y gcc
+
+      - name: Set up compiler on Windows
+        if: runner.os == 'Windows'
+        run: choco install mingw
+
+      - name: Set up compiler on macOS
+        if: runner.os == 'macOS'
+        run: brew install gcc
+
+      - name: Build C program
+        run: make
+
+      - name: Build Java program
+        run: ant -f NeEstimator2x/build.xml
+
+      - name: Rename binary
+        run: |
+          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+            mv Ne2x Ne2L
+          elif [ "${{ matrix.os }}" == "windows-latest" ]; then
+            mv Ne2x.exe Ne2.exe
+          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+            mv Ne2x Ne2M
+          fi
+        shell: bash
+
+      - name: Archive build artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Ne2x-${{ matrix.os }}
+          path: |
+            Ne2L
+            Ne2.exe
+            Ne2M
+            NeEstimator2x/dist/*.jar
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: Ne2x-ubuntu-latest
+          path: release/
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: Ne2x-windows-latest
+          path: release/
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: Ne2x-macos-latest
+          path: release/
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

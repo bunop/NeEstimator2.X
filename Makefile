@@ -7,6 +7,12 @@ CC = gcc
 CXXFLAGS = -std=c11 -Wall
 LDFLAGS = -lm
 
+# Detect the operating system: compiles static on Linux
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+    CXXFLAGS += -static
+endif
+
 # Makefile settings - Can be customized.
 APPNAME = Ne2x
 EXT = .c
