@@ -17,15 +17,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up compiler
-        run: |
-          if [[ "${{ runner.os }}" == "Linux" ]]; then
-            sudo apt-get install gcc
-          elif [[ "${{ runner.os }}" == "Windows" ]]; then
-            choco install mingw
-          elif [[ "${{ runner.os }}" == "macOS" ]]; then
-            brew install gcc
-          fi
+      - name: Set up compiler on Linux
+        if: runner.os == 'Linux'
+        run: sudo apt-get install -y gcc
+
+      - name: Set up compiler on Windows
+        if: runner.os == 'Windows'
+        run: choco install mingw
+
+      - name: Set up compiler on macOS
+        if: runner.os == 'macOS'
+        run: brew install gcc
 
       - name: Build
         run: make
