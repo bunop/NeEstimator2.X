@@ -32,12 +32,26 @@ jobs:
       - name: Build
         run: make
 
+      - name: Rename binary
+        run: |
+          if [ "${{ matrix.os }}" == "ubuntu-latest" ]; then
+            mv Ne2x Ne2L
+          elif [ "${{ matrix.os }}" == "windows-latest" ]; then
+            mv Ne2x.exe Ne2.exe
+          elif [ "${{ matrix.os }}" == "macos-latest" ]; then
+            mv Ne2x Ne2M
+          fi
+        shell: bash
+
       - name: Archive build artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: Ne2x-${{ matrix.os }}
-          path: Ne2x
+          path: |
+            Ne2L
+            Ne2.exe
+            Ne2M
 
       - name: Publish
         if: github.ref == 'refs/heads/master'
