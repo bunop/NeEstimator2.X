@@ -48,6 +48,10 @@ jobs:
           fi
         shell: bash
 
+      - name: Copy JAR to base directory
+        run: |
+          cp NeEstimator2x/dist/NeEstimator2x.jar .
+
       - name: Archive build artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -57,7 +61,7 @@ jobs:
             Ne2L
             Ne2.exe
             Ne2M
-            NeEstimator2x/dist/*.jar
+            NeEstimator2x.jar
 
   publish:
     needs: build
