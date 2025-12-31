@@ -2,7 +2,60 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "C/C++: gcc compila il file attivo",
+            "label": "Build Ne2x Debug",
+            "command": "/usr/bin/gcc",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-std=c11",
+                "-Wall",
+                "-Wextra",
+                "-g3",
+                "-O0",
+                "-DDEBUG",
+                "${workspaceFolder}/Ne2x.c",
+                "-o",
+                "${workspaceFolder}/Ne2x",
+                "-lm"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Compile Ne2x with debug symbols (g3, O0)"
+        },
+        {
+            "type": "cppbuild",
+            "label": "Build Ne2x Release",
+            "command": "/usr/bin/gcc",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-std=c11",
+                "-Wall",
+                "-O3",
+                "-static",
+                "${workspaceFolder}/Ne2x.c",
+                "-o",
+                "${workspaceFolder}/Ne2x",
+                "-lm"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "detail": "Compile Ne2x optimized for release"
+        },
+        {
+            "type": "cppbuild",
+            "label": "C/C++: gcc compile active file",
             "command": "/usr/bin/gcc",
             "args": [
                 "-fdiagnostics-color=always",
@@ -20,11 +73,8 @@
             "problemMatcher": [
                 "$gcc"
             ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "detail": "Attività generata dal debugger."
+            "group": "build",
+            "detail": "Activity for compiling a single C/C++ file"
         }
     ],
     "version": "2.0.0"
