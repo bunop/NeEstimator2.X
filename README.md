@@ -18,7 +18,8 @@ safety and maintainability, while preserving scientific behavior.
 In this phase:
 
 - `Ne2x` remains the original C executable.
-- `main.cpp` is the minimal C++ entrypoint forwarding `argc/argv` to the same C core.
+- `main.cpp` contains a C++ CLI dispatcher equivalent to the legacy C entrypoint,
+  and forwards execution to the same C core routines.
 - `Ne2x_cpp` is the executable produced from `main.cpp` and linked against the same C core.
 - `libne2x.a` exposes the C core so C and C++ binaries execute the same logic.
 
@@ -100,6 +101,62 @@ Expected success message:
 ```text
 PASS: C and C++ wrapper outputs are identical for test_info/test_option.
 ```
+
+## CLI invocation modes
+
+Based on the current dispatcher in `main.cpp`, the program can be invoked in
+**5 high-level modes**:
+
+1. No arguments (interactive/direct mode)
+2. `i:` mode (single run from info directive file)
+3. `m:` mode (multi-file batch, short syntax)
+4. `m+:` mode (multi-file batch, extended syntax)
+5. `c:` mode (common-settings batch mode)
+
+### Syntax summary
+
+```text
+./Ne2x_cpp
+./Ne2x_cpp i:<info_file> [o:<option_file>] [rm]
+./Ne2x_cpp m:<multi_file> [rm]
+./Ne2x_cpp m+:<multi_file> [rm]
+./Ne2x_cpp c:<common_file> [rm]
+```
+
+Equivalent forms are accepted by `Ne2x` as well.
+
+### Meaning of each mode
+
+1. `./Ne2x_cpp`
+	Runs direct/interactive flow (same as legacy behavior when no CLI argument
+	is provided).
+
+2. `i:<info_file>`
+	Runs one analysis from the info directive file. You may also provide
+	`o:<option_file>` to supplement options.
+
+3. `m:<multi_file>`
+	Runs batch processing using the short multi-file directive format.
+
+4. `m+:<multi_file>`
+	Runs batch processing using the extended multi-file directive format.
+
+5. `c:<common_file>`
+	Runs batch processing with common settings followed by input-file entries.
+
+### Optional `rm` argument
+
+`rm` means "remove control file(s) after use":
+
+- In `m:`, `m+:`, and `c:` modes, `rm` requests removing the first control file.
+- In `i:` mode, `rm` can appear as the second argument (if no `o:` is used) or
+  as the third argument (after `o:`).
+
+Notes:
+
+- The parser accepts only command families starting with `i:`, `m:`, `m+:`, or `c:`.
+- Any malformed command prefix prints `Illegal argument!`.
+- The C++ dispatcher intentionally preserves legacy behavior for compatibility.
 
 ## AI customization for this project (VS Code)
 
