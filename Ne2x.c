@@ -1600,6 +1600,7 @@ int GenPopID (FILE *input, char key[], char *popID, int maxlen)
 		} else {	// this data block represents pop name for a new one.
 			for (i=0; i<k; *(popID+i) = *(data+i), i++);
 			*(popID+k) = '\0';
+			free (data);
 			return 1;	// new pop
 		}
 	}
@@ -2815,6 +2816,7 @@ int OptDirective (char *optName, char *xOutLD, char *xOutHet, char *xOutCoan,
 	free(xClues);
 	SetMethod (n, xOutLD, xOutHet, xOutCoan, xOutTemp);
 	if (m <= 0) {	// no number read!
+		free (chroFileName);
 		fclose (optFile);	// no more reading, the rest: default values
 		return linedone;
 	};
@@ -2822,6 +2824,7 @@ int OptDirective (char *optName, char *xOutLD, char *xOutHet, char *xOutCoan,
 
 // max samples per pop:
 	if (GetInt (optFile, maxSamp, 1) <= 0) {
+		free (chroFileName);
 		fclose (optFile);
 		return linedone;
 	};
@@ -2833,6 +2836,7 @@ int OptDirective (char *optName, char *xOutLD, char *xOutHet, char *xOutCoan,
 // at the calling function (RunOption). If popLoc1 = 0, popLoc2 is ignored,
 // no Freq. output!
 	if (m <= 0) {
+		free (chroFileName);
 		fclose (optFile);
 		return linedone;
 	};
@@ -2853,6 +2857,7 @@ int OptDirective (char *optName, char *xOutLD, char *xOutHet, char *xOutCoan,
 // then for the next two, use GetPair.
 // The last 0 in GetInt is to stay on the line if a legitimate integer read
 	if (GetInt (optFile, popBurr1, 0) <= 0) {
+		free (chroFileName);
 		fclose (optFile);
 		return linedone;
 	};
@@ -2889,6 +2894,7 @@ int OptDirective (char *optName, char *xOutLD, char *xOutHet, char *xOutCoan,
 	linedone++;
 // run parametric CIs or not
 	if (GetInt (optFile, &n, 1) <= 0) {
+		free (chroFileName);
 		fclose (optFile);
 		return linedone;
 	};
@@ -2896,6 +2902,7 @@ int OptDirective (char *optName, char *xOutLD, char *xOutHet, char *xOutCoan,
 	*param = (n != 0)? 1: 0;
 // run jacknife CIs or not
 	if (GetInt (optFile, &n, 1) <= 0) {
+		free (chroFileName);
 		fclose (optFile);
 		return linedone;
 	};
@@ -2922,13 +2929,18 @@ int OptDirective (char *optName, char *xOutLD, char *xOutHet, char *xOutCoan,
 	linedone++;
 	if ((n = LociDropped (optFile,locUse,nloci,&linedone,0,0,byRange)) == -1)
 	{
+		free (chroFileName);
 		fclose (optFile);
 		return linedone;
 	};
 	*nLocDel = n;
 	linedone++;
 // Add in 2015: have missing data file or not:
-	if (GetInt (optFile, &n, 1) <= 0) return linedone;
+	if (GetInt (optFile, &n, 1) <= 0) {
+		free (chroFileName);
+		fclose (optFile);
+		return linedone;
+	}
 	linedone++;
 	*misDat = (n != 0)? 1: 0;
 
@@ -2938,6 +2950,7 @@ int OptDirective (char *optName, char *xOutLD, char *xOutHet, char *xOutCoan,
 //	chroInp = ChromoInp (optFile, inpFolder, chroGrp);
 
 // Close the file:
+	free (chroFileName);
 	fclose (optFile);
 	return linedone;	// maximum data lines have been read
 }
@@ -12249,7 +12262,7 @@ int PrtLeading (FILE *xOutput, float *critVal, int nCrit, int topCrit,
 //			fprintf (xOutput, "Lowest allele frequency used: %8.4f\n",
 //							critVal[*stCrit]);
 			fprintf (xOutput, "Lowest allele frequency used: ");
-			if (forLD != 0 && critVal[i] > 0 && critVal[i] <= PCRITX) {
+			if (forLD != 0 && critVal[*stCrit] > 0 && critVal[*stCrit] <= PCRITX) {
 				fprintf (xOutput, "   \"%s\"\n", NOSNGL);
 				specP = 1;
 			} else fprintf (xOutput, "%8.4f\n", critVal[*stCrit]);
@@ -12335,6 +12348,7 @@ int PrtLDHeader (FILE *xOutput, float *critVal, int nCrit, int topCrit,
 	if (jack == 1) fprintf (xOutput, "\t       Low\t      High\t  (Eff.df)");
 //                                      1234567890  1234567890  1234567890
 	fprintf (xOutput, "\n");
+	free (method);
 	return nCrit;
 }
 
@@ -13578,6 +13592,7 @@ int RunPop0 (int icount, char *inpName, FILE *input, char append, FILE *output,
 	popID = (char*) malloc(sizeof(char)*lenBlock);
 	newID = (char*) malloc(sizeof(char)*lenBlock);
 	*popID = '\0';
+	*newID = '\0';
 // nCrit is small, those are not likely to fail:
 	wExpR2 = (float*) malloc(sizeof(float)*nCrit);
 	estNe = (float*) malloc(sizeof(float)*nCrit);
@@ -13656,7 +13671,8 @@ int RunPop0 (int icount, char *inpName, FILE *input, char append, FILE *output,
 	nSampErr = 0;
 	nErr = 0;
 	for (; next != -1 && popRead <= popEnd; ) {
-		strcpy (popID, newID);
+		strncpy (popID, newID, lenBlock-1);
+		*(popID + lenBlock - 1) = '\0';
 		if (format == FSTAT) next = DatPopID (input, newID, lenBlock);
 		else next = GenPopID (input, "pop", newID, lenBlock);
 		if (next != 0) {
@@ -14194,6 +14210,7 @@ for (p=0; p<nloci; p++){
 		for (n=0; n<MAXGENERATION; n++)
 			free (popIDtemp [n]);		//56
 	};
+	free (outFile);
 
 //	if (nErr > 0) fclose (missDat);
 	if (missDat != NULL) {
@@ -15339,6 +15356,7 @@ int RunOption (char misFilSuf[], char LocSuf[], char BurSuf[],
 
 
 	AGEPTR *ageSeq;
+	AGEPTR ageptr, agenext;
 	int nSeq, nPlan, census;
 	int tempClue, tempxClue;
 	int totPop = 0, totPairTmp = 0;
@@ -15644,8 +15662,16 @@ int RunOption (char misFilSuf[], char LocSuf[], char BurSuf[],
 	free (outLocName);
 	free (outBurrName);
 	free (missFileName);
+	free (locUse);
 	free (outFile);
 	free (outFile0);
+	ageptr = *ageSeq;
+	while (ageptr != NULL) {
+		agenext = ageptr->next;
+		free (ageptr);
+		ageptr = agenext;
+	}
+	free (ageSeq);
 // Apr 2015:
 	if (locList != NULL) free (locList);
 	if (chromoList != NULL) RmChromo (chromoList);
