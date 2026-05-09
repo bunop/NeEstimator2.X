@@ -1,0 +1,37 @@
+15   0  	* First number n = sum of method(s) to run: LD(=1), Het(=2), Coan(=4), Temporal(=8). Second number k is for various temporals; see below
+/Users/jenniferovenden/Dropbox/MFL Work Dropbox Sync/Prawn Ne/NeEstimator/NeEstimator V2/March 2016 onwards/Draft Software Versions Ne2 New/171212 Release/ 	* Input Directory
+8Ne50.dat 	* Input file name
+1 			* 1 = FSTAT format, 2 = GENEPOP format
+/Users/jenniferovenden/Dropbox/MFL Work Dropbox Sync/Prawn Ne/NeEstimator/NeEstimator V2/March 2016 onwards/Draft Software Versions Ne2 New/171212 Release/ 	* Output Directory
+8Ne50Ne.txt 	* Output file name (put asterisk adjacent to the name to append)
+4 			* Number of critical values, added 1 if a run by rejecting only singleton alleles is included
+0.05  0.02  0.01  1  	* Critical values, a special value '1' is for rejecting only singleton alleles
+0 		* 0: Random mating, 1: Monogamy (LD method)
+0 0 1.5 	* One set of generations per line. The first entry is N > 0 for plan I, 0 for plan II. Then generations follow.
+0 		* Only 0 entered: End of generations input
+
+* Input/Output directories should be ended by a separator: '/'.
+  If the directory contains the executable Ne2M, it may be left empty.
+
+* An asterisk after a blank may be used to signal the end of data
+  on the line. It is not required.
+
+* Line 1 may contain 2 entries n, k, where n is for which methods.
+  If n < 8, then no Temporal method, and k is ignored if entered.
+  If n >= 8, then k is to limit temporal to one or more of the 3 methods,
+  by taking the sum
+	Pollak = 1, Nei/Tajima = 2, Jorde/Ryman = 4.
+  	(May enter k = 0 for all temporal methods.)
+
+* Line 7 contains n = number of positive critical values to be read.
+  If only Molecular Coancestry (4 on line 1), then n must be 0.
+  If n > 0, the next line should contain n positive critical values.
+  A special critical value, '1', is not the actual value,
+  but to indicate a run where only singleton alleles are rejected.
+  Critical value 0 (no restriction) is automatically added, unless
+  a negative value is entered after the last value. If a negative is inserted
+  before the last value, then entries for critical values end there.
+  The same effect if an asterisk is put immediately after the last value.
+
+* Generations (excluding entry N) should be given in ascending order.
+  If not, an asterisk should be put adjacent to the last entry.

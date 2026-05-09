@@ -1,0 +1,32 @@
+c1 loc-1
+c1 loc-2
+c2 loc-9
+c2 loc-10
+c3 loc-11
+c1 loc-12
+c2 loc-13
+c3 loc-14
+c2 loc-3
+c4 loc-4
+c4 loc-5
+c5 loc-6
+c5 loc-7
+c4 loc-8
+c1 loc-15
+c1 loc-16
+c2 loc-17
+c2 loc-18
+c3 loc-19
+c4 loc-20
+c3 loc-27
+c5 loc-28
+c5 loc-29
+c3 loc-30
+c5 loc-21
+c4 loc-22
+c4 loc-23
+c4 loc-24
+c3 loc-25
+c5 loc-26
+
+

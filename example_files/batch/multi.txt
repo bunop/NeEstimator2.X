@@ -1,0 +1,133 @@
+15		* All methods, the temporal methods include all three: Pollak, Nei/Tajima, Jorde/Ryman.
+3		* 3 positive critical values, critical values will be listed on next line
+0.1  0.05  0.02	* All 3 positive critical values.
+0 0 1		* Plan II for temporals. Generations are 0, 1 applied to all populations
+input1.dat	* Input file.
+Test1.out	* Main output file name.
+y *************** first char must be 'y' (case insensitive) for continuing next input, else: stop. INPUT 2
+7		* 7 = all methods except temporal: there should be no line for generations
+3		* 3 positive critical values for rare alleles.
+0.1  0.05  0.02	* All critical values as said on previous line
+input2.gen	* input file name
+Test2.out	* main output
+Y *************** Continuing next input ************ INPUT  3 ****************
+15		* 15: all methods.
+3		* 3 critical values
+0.1  0.05  0.02	* Critical values
+0 0 1		* Generation timeline for temporal. Plan II, generations 0, 1 applied to all
+input2.gen	* input file name - Input & Output are all in the same dir. as the executable
+Test2.out	* output file name, same name as previous one, so all outputs will be appended
+Y *************** Continuing next input *********** INPUT  4 ******************
+8  2		* 8 = Temporal methods only. Second number 2 = Nei/Tajima; so only Nei/Tajima temporal method is run
+3		* 3 critical values.
+0.1  0.05  0.02	* Critical values
+200 0 1		* Generations for temporal. (Plan I, Census size = 200)
+input1.dat	* input file
+Test1.out*	* MAIN output file name ended by asterisk, so all outputs will be appended
+q *************** The first letter is neither 'y' nor 'Y',
+		  the program stops reading this file.
+
+To run Ne2 with this file, open a terminal at the directory containing the
+executable Ne2, this file, and all input files mentioned in this file.
+Then issue command line (assuming this file is named "multi.txt"):
+	  Ne2 m:multi.txt	(Windows)
+	./Ne2M m:multi.txt	(Mac)
+	./Ne2L m:multi.txt	(Linux)
+(prefix for the name: letter 'm' followed by a colon ':').
+
+
+General Instructions
+--------------------
+This type of running multiple files assumes the default settings:
+* LD method will be Random Mating model,
+* Temporal methods are in Plan II,
+* All Confidence Intervals will be outputted,
+* No restriction on loci or populations or number of individuals,
+* No outputs in tabular format.
+
+Each run requires up to 6 lines.
+One line less if there is no temporal method (M < 8 on line 1).
+
+Each line can be terminated by a white space (blank or tab) followed by an
+asterisk (then comments can be put on the line after the asterisk).
+The asterisk is optional except for the line reserved for "generation set"
+in temporal methods. Note that the asterisk should be after a white space,
+unless at the line for output file name, where the asterisk will play a role.
+
+
+Line 1: A number M from 1 to 15 to indicate which method(s) to run:
+                 M = 1 for Linkage Disequilibrium method,
+                 M = 2 for Heterozygote Excess method,
+                 M = 4 for Molecular Coancestry method,
+                 M = 8 for Temporal methods.
+
+        For multiple methods, M is the sum of the designated method numbers.
+        Examples: M = 3 = LD + Het-Excess; M = 9 = LD + Temporals.
+
+        A second number T can be entered to indicate which temporal method(s)
+        to run (if temporal is indicated by entry M >= 8). T can be any
+        number at least 0.
+        * If T = 0, or T is at least 7, or T is absent, then all temporal
+          methods are included. If T is absent, there should be a non-digit
+          character, e.g. an asterisk, following at least a blank after entry M.
+        * If 1 < T < 7, then T is one or is the sum of two of the following:
+          1 (Pollak method), 2 (Nei/Tajima method), 4 (Jorde/Ryman method).
+          The temporal method(s) to run will be the ones corresponding to
+          the number(s) included in T. This is similar to how M is designated.
+        (If M < 8, i.e., no temporal methods, then T is ignored if entered.)
+
+Line 2: A number C for the number of POSITIVE critical values. If C > 0, the
+        next line should list all C critical values. If C = 0, there should be
+        no line for critical values. (Molecular Coancestry method will
+        ignore all positive critical values. But even if M = 4 on line 1,
+        i.e., only Molecular Coancestry being run, the list of critical
+        values must be entered on the next line if C > 0 is entered here.)
+
+Line 3: Lists all positive critical values as said on line 2.
+        Critical value 0 will be automatically added to the list.
+        To exclude value 0, enter -1 (minus one) after the last critical value.
+        If -1 is inserted after any value listed here, the list will stop
+        at that value, regardless of the value of C.
+        Examples. Suppose C = 3.
+        * If line 3 consists of
+        	0.05  0.02  0.01
+          then list of critical values is 0.05, 0.02, 0.01, and 0.
+        * If line 3 consists of
+        	0.05  -1  0.02  0.01 -1
+          then list of critical values is 0.05, 0.02, 0.01 (no zero).
+        * If line 3 consists of
+        	0.05  -1  0.02  0.01
+          then list of critical values is 0.05.
+        * If line 3 consists of
+        	-1  0.05  0.02  0.01
+          then the list of critical values consists of only 0, the effect is
+          the same as C = 0.
+
+Line 4: For "Generation Set" in Temporal methods when M on line 1 is
+        at least 8. A generation set consists of a number N followed by
+        at least two ascending numbers for generations (these numbers can
+        have decimals). The generation set applies to the whole input file.
+        If N = 0, temporal method(s) will assume Plan II.
+        If N > 0, then temporal method(s) will assume Plan I and N is
+        the census population size.
+
+Line 5: Input file name.
+        If its extension is "gen", it must be in GENEPOP format.
+
+Line 6: Main Output file name. In general, the file if existed will be
+        overwritten. It will be appended if one of the following takes place.
+        
+        * It has the same name as the output file of the preceding run.
+          (Important note: the names are compared with CASE-SENSITIVE.)
+        * The name is ended by an asterisk (no white space between).
+
+        NOTE: If the main output is overwritten or appended, then all extra
+        output files will also be in the same mode.
+
+After the line for main output file name, if the next line starts with letter
+'Y' (case insensitive), then it is expected there will be another run.
+Therefore, to terminate, enter something else as first character on the line.
+
+
+
+

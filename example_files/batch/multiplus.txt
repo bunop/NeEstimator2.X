@@ -1,0 +1,289 @@
+15		* All methods, the temporal methods include all three: Pollak, Nei/Tajima, Jorde/Ryman.
+3		* 3 positive critical values, critical values will be listed on next line
+0.1  0.05  0.02	* All 3 positive critical values.
+0 0 1		* Plan II for temporals. Generations are 0, 1 applied to all populations
+11 0 2		* Extra outputs for LD(1) + Het(2) + Temporal(8) = 11. All 3 temporal methods, 3rd entry = 2: only for top 2 critical values: 0.1 and 0.05
+1 		* Create CI
+0 		* Random mating in LD, required because LD is included on first line
+0 		* 0: no restriction on samples/population
+0		* 0: no restriction on number of populations
+1 5   		* Run with loci 1 - 5 only.
+input1.dat	* Input file.
+Test1.out	* Main output file name.
+y *************** first char must be 'y' (case insensitive) for continuing next input, else: stop. INPUT 2
+7		* 7 = all methods except temporal: there should be no line for generations
+3		* 3 positive critical values for rare alleles.
+0.1  0.05  0.02	* All critical values as said on previous line
+7 		* Extra Output Files for all. (No restriction on critical values, and no Tab-delimiter.)
+0 		* No CI
+0 		* Random mating in LD, required because LD is included on first line
+100 		* process only up to 100 individuals per population.
+2 2		* Only Population 2 is processed.
+0		* No Loci to be removed.
+input2.gen	* input file name
+Test2.out	* main output
+Y *************** Continuing next input *********** INPUT  3 ******************
+8  2		* 8 = Temporal methods only. Second number 2 = Nei/Tajima; so only Nei/Tajima temporal method is run
+3		* 3 critical values.
+0.1  0.05  0.02	* Critical values
+200 0 1		* Generations for temporal. (Plan I, Census size = 200)
+8  0  1		* Extra Output File. 2d number has no effect (because only one temporal), 3rd = 1: only for the top critical value 0.1
+1 		* Create CI
+0 		* 0: no limit on individuals/pop.
+2		* Population range (up to population 2, so up to 2 populations are run)
+0		* 0: no loci removed.
+input1.dat	* input file
+Test1.out*	* MAIN output file name ended by asterisk, so all outputs will be appended
+Y *************** Continuing next input ************ INPUT  4 *****************
+15  0  		* All Methods. 2nd number = 0: all temporals included (this is redundant)
+0		* Number of critical values is 0, so there is no line for critical values
+500 0 1		* Generations timeline for temporal. (Plan 1, census size = 500)
+15  4  1	* 15: Extra Output Files for all; 4: Jorde/Ryman temporal method only; 1: top 1 Critical values, irrelevant because no positive critical value
+1 		* Create CI
+0 		* Random mating in LD, required because LD is included on first line
+30 		* Limit to individual 30/pop
+2  5		* from population 2 to population 5 (4 populations)
+0		* 0: No loci to be removed.
+input1.dat	* input file
+Test1.out	* MAIN output file name same as previous one, so all outputs will be appended
+Y *************** Continuing next input ************ INPUT  5 ****************
+15		* 15: all methods.
+3		* 3 critical values
+0.1  0.05  0.02	* Critical values
+0 0 1		* Generation timeline for temporal. Plan II, generations 0, 1 applied to all
+15 		* Extra Output File for all, no restriction on temporals, no restriction on critical values.
+0 		* No CI created
+0 		* Random mating in LD, required because LD is included on first line
+0 		* 0: no limit on individuals/pop
+0		* 0: no restriction on number of populations
+1  4  8  10	* Loci 1-4, and 8-10 will be run.
+input2.gen	* input file name - Input & Output are all in the same dir. as the executable
+Test2.out*	* output file name ended by asterisk, so all outputs will be appended
+Y *************** Continuing next input ************** INPUT  6 ***************
+15  6		* 15: all methods. For temporal, 6 = 2(Nei/Tajima) + 4(Jorde/Ryman) methods
+3		* 3 critical values
+0.1  0.05  0.02	* Critical values
+200 0 2		* Generation timeline for temporal. Plan I, with census size = 200
+15  3		* Extra Output File for all. The second 3 for temporal Pollak(1) + Nei/Tajima(2), so only Nei/Tajima method is in extra output.
+1 		* Create CI
+0 		* Random mating in LD, required because LD is included on first line
+0 		* 0: no limit on individuals/pop
+0		* 0: no restriction on number of populations
+6  		* only number 6 > 0 on this line, so only loci from 1 to 6 will be considered.
+input1.dat	* input file
+Test1.out*	* output file name ended by asterisk, so all outputs will be appended
+Y *************** Continuing next input ***************** INPUT  7 *************
+7		* 7 = All methods except temporal
+3		* 3 critical values
+0.1  0.05  0.02	* Critical values
+7  0 0		* Extra Output File for all. The second entry (0) is for temporal, irrelevant because no temporal here, but is needed to have the 3rd entry: 0, which means extra output for critical value 0 only
+1 		* Create CI
+0 		* Random mating in LD, required because LD is included on first line
+0 		* 0: no limit on individuals/pop
+0		* 0: no restriction on number of populations
+0		* 0: No loci to be removed.
+input2.gen	* input file name
+Test2.out*	* output file name ended by asterisk, so all outputs will be appended
+q *************** The first letter is neither 'y' nor 'Y',
+		  the program stops reading this file.
+
+To run Ne2 with this file, open a terminal at the directory containing the
+executable Ne2, this file, and all input files mentioned in this file.
+Then issue command line (assuming this file is named "multiplus.txt"):
+	  Ne2 m+:multiplus.txt	(Windows)
+	./Ne2M m+:multiplus.txt	(Mac)
+	./Ne2L m+:multiplus.txt	(Linux)
+Prefix for the name of this file:
+	Letter 'm' followed by plus sign '+' and a colon ':',
+regardless of how this file is named.
+
+
+General Instructions
+--------------------
+Each run may require up to 12 lines.
+One line less if there is no temporal method (M < 8 on line 1).
+One line less if no positive critical values (C = 0 on line 2).
+One line less if no LD method (M is an odd number on line 1).
+Thus, the minimum number of lines is 9.
+
+Each line can be terminated by a white space (blank or tab) followed by an
+asterisk (then comments can be put on the line after the asterisk).
+The asterisk is optional except for the line reserved for "generation set"
+in temporal methods. Note that the asterisk should be after a white space,
+unless at the line for output file name, where the asterisk will play a role.
+
+
+Line 1:  A number M from 1 to 15 to indicate which method(s) to run:
+                  M = 1 for Linkage Disequilibrium method (LD),
+                  M = 2 for Heterozygote Excess method,
+                  M = 4 for Molecular Coancestry method,
+                  M = 8 for Temporal methods.
+
+         For multiple methods, M is the sum of the designated method numbers.
+         Examples: M = 3 = LD + Het-Excess; M = 9 = LD + Temporals.
+
+         A second number T can be entered to indicate which temporal method(s)
+         to run (if temporal is indicated by entry M >= 8). T can be any
+         number at least 0.
+         * If T = 0, or T is at least 7, or T is absent, then all temporal
+           methods are included. If T is absent, there should be a non-digit
+           character, e.g. an asterisk, following at least a blank after entry M.
+         * If 1 < T < 7, then T is one or is the sum of two of the following:
+           1 (Pollak method), 2 (Nei/Tajima method), 4 (Jorde/Ryman method).
+           The temporal method(s) to run will be the ones corresponding to
+           the number(s) included in T. This is similar to how M is designated.
+           (If M < 8, i.e., no temporal methods, then T is ignored if entered.)
+
+Line 2:  A number C for the number of POSITIVE critical values. If C > 0, the
+         next line should list all C critical values. If C = 0, there should
+         be no line for critical values. (Molecular Coancestry method will
+         ignore all positive critical values. But even if M = 4 on line 1,
+         i.e., only Molecular Coancestry being run, the list of critical
+         values must be entered on the next line if C > 0 is entered here.)
+
+Line 3:  Lists all positive critical values as said on line 2.
+         This line exists only if entry C on line 2 is positive.
+         Critical value 0 will be automatically added to the list.
+         To exclude value 0, enter "-1" after the last critical value.
+         If -1 is inserted after any value listed here, the list will stop
+         at that value, regardless of the value of C.
+         Examples. Suppose C = 3.
+         * If line 3 consists of
+        	0.05  0.02  0.01
+           then list of critical values is 0.05, 0.02, 0.01, and 0.
+         * If line 3 consists of
+        	0.05  0.02  0.01 -1
+           then list of critical values is 0.05, 0.02, 0.01 (no zero).
+         * If line 3 consists of
+        	0.05  -1  0.02  0.01
+           then list of critical values is 0.05 (no zero).
+         * If line 3 consists of
+        	-1  0.05  0.02  0.01
+           then the list of critical values consists of ONLY 0, the effect is
+           the same as C = 0 on line 2.
+
+Line 4:  For "Generation Set" in Temporal methods when M on line 1 is
+         at least 8. A generation set consists of a number N followed by
+         at least two ascending numbers for generations (these numbers can
+         have decimals). The generation set applies to the whole input file.
+         If N = 0, temporal method(s) will assume Plan II.
+         If N > 0, then temporal method(s) will assume Plan I and N is
+         the census population size.
+
+         To terminate a generation set, at least a white space (blank or tab)
+         followed by an asterisk should be entered.
+
+Line 5:  A number M+ to indicate if extra ouput files in tabular format will
+         be written for any or all methods indicated on line 1.
+         The value of M+ is constructed in the same way as M on line 1.
+         If M+ = 0, no extra outputs will be written.
+
+         * Note: If M+ indicates a method not included by M, that method will
+         be ignored. For example, if M = 5 (LD and Molecular Coancestry), and
+         M+ = 2 (Het-Excess), then no method will be outputted to extra files,
+         the effect is the same as M+ = 0. Essentially, anything to be put
+         in extra files must be included in the main output file.
+
+         * If M+ includes temporal methods, then a second number T+ can be
+         entered to indicate which temporal method(s) to be outputted in
+         extra file. This T+ is interpreted the same way as T on line 1.
+         Therefore, if T+ = 0, or is absent, all temporal methods for main
+         output file will be in extra output file as well.
+         
+         However, if this T+ conflicts with T on line 1, in the sense that
+         none of the methods it indicates is in the main output file, then
+         the value of T+ will be ignored (as it is not entered or it is 0).
+         
+         For example, if M+ = M = 8, and T = 3 (Pollak and Nei/Tajima in the
+         main output), but T+ = 4 (Jorde/Ryman), then this T+ conflicts with
+         T, so will be ignored. As a result, Pollak and Nei/Tajima methods
+         being in main output file will also be in extra output file.
+         With the same example, but now T+ = 5 (Pollak and Jorde/Ryman), then
+         it is not considered a conflict with T since it has Pollak method
+         in common; so only Pollak method is in extra output file.
+
+         * A third number C+ is entered for limitation on critical values
+         outputted to all extra output files. To be a third, there must be a
+         second on the line, which is T+, even no temporal output (T+ is
+         then ignored but must be entered, such as T+ = 0).
+         The number C+ is for the number of highest critical values outputted
+         to extra files.
+         For example, if positive critical values are 0.05, 0.02 (C = 2), and
+         C+ = 1, then only critical value 0.05 is on all extra output files.
+
+         If C+ = 0, only critical value 0 is on the extra output files.
+         If C+ > C (number of POSITIVE critical values), or C+ is ABSENT,
+         then all critical values, including 0, will be on extra output files.
+
+         NAMES for EXTRA OUTPUT Files
+         ----------------------------
+         From the name of the main output file, the extension is removed to
+         obtain the principal name, Then the following suffixes are added to
+         the principal name to make the names for extra output files:
+
+         * For LD, suffix = "xLD.txt"
+         * For Het-Excess, suffix = "xHt.txt"
+         * For Molecular Coancestry, suffix = "xCn.txt"
+         * For Temporal, suffix = "xTp.txt"
+
+         Examples: (All names are enclosed by double quotes.)
+         (1) Suppose the main output is "main.out" or "main" (no extension).
+             Then the principal name is "main"; so
+               * Extra output file name for LD: "mainxLD.txt"
+               * Extra output file name for Het-Excess: "mainxHt.txt"
+               * Extra output file name for Molecular Coan.: "mainxCn.txt"
+               * Extra output file name for Temporal: "mainxTp.txt"
+
+         (2) Suppose the main output is "main.txt.out". Then the extension is
+             "out", the principal name is "main.txt". So
+               * Extra output file name for LD: "main.txtxLD.txt"
+               * Extra output file name for Het-Excess: "main.txtxHt.txt"
+               * Extra output file name for Molecular Coan: "main.txtxCn.txt"
+               * Extra output file name for Temporal: "main.txtxTp.txt"
+
+Line 6:  Enter 1 to have Confidence intervals created, 0 if not.
+
+Line 7:  If LD method is included by entry M on line 1 (when M is odd), then
+         this line is for mating model: enter 0 for Random, 1 for Monogamy.
+
+Line 8:  A number S for the maximum number of individuals in each population
+         to be processed, starting from the first individual.
+         If S = 0, no restriction.
+
+Line 9:  Either one number P or two numbers P, Q are entered to restrict
+         the processing of populations in input file.
+         If P <= 0: no restriction (Q if entered will be ignored).
+         If P > 0 and no Q entered, then populations up to population P will
+         be processed.
+         If both P and Q are entered (they should be positive) and P <= Q,
+         then populations to be processed will be in the range from P to Q.
+         However, if P > Q, the second entry Q is erroneous, and is rejected,
+         therefore, it is assumed only one entry P is entered.
+
+         Note that when temporal is in place, then generation set should be
+         applied starting from the first population in the range.
+
+Line 10: Enter ranges of loci to be considered. Each range consists of two
+         ascending numbers. If 0 (zero) is the first number on this line,
+         then no restriction on loci.
+
+Line 11: Input file name.
+         If its extension is "gen", it must be in GENEPOP format.
+
+Line 12: Main Output file name. In general, the file if existed will be
+         overwritten. It will be appended if one of the following takes place.
+        
+         * It has the same name as the output file of the preceding run.
+           (Important note: the names are compared with CASE-SENSITIVE.)
+         * The name is ended by an asterisk.
+           (No white space - blank or tab - in front of the asterisk.)
+
+         NOTE: If the main output is overwritten or appended, then all extra
+         output files will also be in the same mode.
+
+After the line for main output file name, if the next line starts with letter
+'Y' (case insensitive), then it is expected there will be another run.
+Therefore, to terminate, enter something else as first character on the line.
+
+
+

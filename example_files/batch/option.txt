@@ -1,0 +1,71 @@
+0  0   	* First number = sum of method(s) to have extra output: LD(=1), Het(=2), Coan(=4), Temporal(=8)
+0 	* Maximum individuals/pop. If 0: no limit
+0 	* First entry n1 = 0: No Freq output. If n1 = -1: Freq. output up to population 50. Two entries n1, n2 with n1 <= n2: Freq output for populations from n1 to n2. Max. populations to have Freq output is set at 50
+-1 1 0 0 	* For Burrow output file (up to 50 populations can have output). See remark below
+1 	* Parameter CI: 1 for Yes, 0 for No
+1 	* Jackknife CI: 1 for Yes, 0 for No
+0 	* Up to population, or range of populations to run (if 2 entries). If first entry = 0: no restriction
+0 	* All loci are accepted
+1 	* Enter 1: A file is created to document missing data if there are any in input file. Enter 0: no file created
+0  	* Line for chromosomes/loci option and file
+
+* Line 1 (Tabular-format outputs): If the first entry includes Temporal (>= 8),
+  the second entry is to limit temporal output to one or more of the 3 methods:
+	Pollak = 1, Nei/Tajima = 2, Jorde/Ryman = 4.
+  If the second entry is 0, or is at least 7, or absent: extra output has all
+  temporals shown in the main output. This is the default.
+  > Third entry C (the second must be entered even no Temporal) is for the
+  number of highest critical values to be outputted in tabular-format outputs.
+  (If C = 0, only the smallest critical value, usually 0, is outputted.)
+  If C is at least the number of critical values including 0 (e.g. C = 10),
+  then all critical values are included in tabular-format outputs.
+  > Fourth entry F is for Tab delimiter (entry C as described above must be
+  entered). F = 0: no Tab delimiter. F > 0: Tab delimiter in these outputs.
+  (If no F is given, default F = 0.)
+
+  Extra Outputs cannot contain more methods than the main output,
+  so the two entries here may be superseded by entries for main output.
+  If temporal is desired for extra output, at least one temporal method
+  must be present; so if second entry causes such error [NOT picking any
+  method that is included in the main output], default will take place.
+
+* Line 4: Up to 5 entries can be entered for Burrows output.
+  If the first entry n1 = 0: NO Burrows output, the rest are ignored.
+  If n1 = -1: all populations up to population 50 to have Burrows output.
+  Two entries n1, n2 (0 < n1 <= n2): Burrows output for the range of
+  populations from n1 to n2. Maximum 50 populations can have Burrows output.
+
+  The next entry m (after n1 = -1, or after n1, n2) is for the number of
+  critical values, counting from the highest, to have Burrows output.
+  (If m = 0, only the smallest critical value, usually 0, is outputted).
+  Entry k after m: k = 0 or k = 2 if all Burrows output are in one file, 
+  (k = 0 for values at allele pairs, k = 2 for values in locus pairs)
+  k = 1 or k = 3 if multiple files, one file per population and Pcrit.
+  (k = 1 for values at allele pairs, k = 3 for values in locus pairs)
+  Last entry is applied to outputs in locus pairs only:
+  0 (default) for less outputs, 1 for more (Ind. alleles, Mean D and r)
+
+  Names for Freq. or Burrows (single) output files are taken from input name
+  without its extension, and then added suffix 'Loc' or 'Bur' accordingly.
+
+  If multiple files for Burrows, names are the word 'Pop' followed by its
+  numbering, then the word 'Bur' followed by last 2 digits of Pcrit.
+
+* Line 8 is for loci restriction. Enter only number 0 if no restriction.
+  If only one positive number is given, it is the number of loci to be omitted,
+  the next line(s) then list omitted loci (ended by a non-digit character).
+  If more than one entry are entered on line 8, then they should be entered
+  in pairs on the same line, each pair is for a range of loci to be included.
+  Examples:	pair 2 5 is for loci from 2 to 5; pair 9 9 is for locus 9.
+
+* Line after loci restriction line(s) are for Missing Data output:
+  if 1 is entered, a file is created if there are missing data in input file,
+  its name is the input name without extension, with added suffix 'NoDat.'
+
+* (Optional) last line is for loci pairing in LD method.
+  First entry:
+  = 0: no pairing restriction,
+  = 1: both loci must be within one chromosome,
+  = 2: two loci must be in separate chromosomes.
+  Second entry is the file name for chromosomes/loci,
+  which is needed if the first entry is non-zero.

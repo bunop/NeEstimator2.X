@@ -1,0 +1,558 @@
+Output from NeEstimator v2.1
+Starting time: Wed Dec 13 09:54:26 2017
+Input File: "8Ne50.dat"
+
+Run up to Population 8 
+Number of Loci = 20
+
+LD mating model: Random
+
+(Symbol "No S*" in Frequency means that NO Singleton Alleles are accepted.)
+
+Population     1 [1]  (Number of Individuals = 50)
+****************
+--------------------------------------------------------------------------------------
+Lowest Allele Frequency Used     0.050       0.020       0.010       No S*         0+
+--------------------------------------------------------------------------------------
+
+LINKAGE DISEQUILIBRIUM METHOD
+
+Harmonic Mean Sample Size =       50.0        50.0        50.0        50.0        50.0
+Independent Comparisons =       5430        6273        6380        6273        6380
+OverAll r^2 =                 0.025731    0.025342    0.025031    0.025342    0.025031
+Expected r^2 Sample =         0.021276    0.021276    0.021276    0.021276    0.021276
+Estimated Ne^ =                   72.7        79.9        86.7        79.9        86.7
+
+95% CIs for Ne^
+* Parametric                      59.0        64.8        69.6        64.8        69.6
+                                  92.7       102.0       112.5       102.0       112.5
+
+* JackKnife on Samples            48.7        54.2        59.2        54.2        59.2
+                                 126.9       136.7       147.2       136.7       147.2
+
+
+HETEROZYGOTE EXCESS METHOD
+
+Harmonic Mean Sample Size =       50.0        50.0        50.0                    50.0 
+Independent Alleles =            107         115         116                     116  
+Weighted Mean D =              0.02594     0.02673     0.02645                 0.02645
+Estimated Neb^  =                 19.8        19.2        19.4                    19.4
+
+95% CIs for Nb:
+* Parametric                      11.3        11.7        11.8                    11.8
+                                  85.9        55.9        56.7                    56.7
+
+MOLECULAR COANCESTRY METHOD
+
+Harmonic Mean Sample Size =                                                       50.0
+OverAll f1^    =                                                               0.01610
+Estimated Neb^ =                                                                  31.1
+
+95% CIs for Ne^
+* Jackknife on Loci                                                                6.4
+                                                                                  74.8
+**************************************************************************************
+
+Population     2 [2]  (Number of Individuals = 50)
+****************
+--------------------------------------------------------------------------------------
+Lowest Allele Frequency Used     0.050       0.020       0.010       No S*         0+
+--------------------------------------------------------------------------------------
+
+LINKAGE DISEQUILIBRIUM METHOD
+
+Harmonic Mean Sample Size =       50.0        50.0        50.0        50.0        50.0
+Independent Comparisons =       5843        6494        6607        6494        6607
+OverAll r^2 =                 0.027237    0.026989    0.026882    0.026989    0.026882
+Expected r^2 Sample =         0.021276    0.021276    0.021276    0.021276    0.021276
+Estimated Ne^ =                   53.8        56.2        57.3        56.2        57.3
+
+95% CIs for Ne^
+* Parametric                      45.6        47.8        48.8        47.8        48.8
+                                  64.5        67.2        68.6        67.2        68.6
+
+* JackKnife on Samples            37.9        41.1        42.4        41.1        42.4
+                                  83.9        83.0        83.1        83.0        83.1
+
+
+HETEROZYGOTE EXCESS METHOD
+
+Harmonic Mean Sample Size =       50.0        50.0        50.0                    50.0 
+Independent Alleles =            111         117         118                     118  
+Weighted Mean D =              0.02982     0.02657     0.02621                 0.02621
+Estimated Neb^  =                 17.3        19.3        19.6                    19.6
+
+95% CIs for Nb:
+* Parametric                      10.2        10.8        10.9                    10.9
+                                  62.5       108.4       113.0                   113.0
+
+MOLECULAR COANCESTRY METHOD
+
+Harmonic Mean Sample Size =                                                       50.0
+OverAll f1^    =                                                               0.04878
+Estimated Neb^ =                                                                  10.3
+
+95% CIs for Ne^
+* Jackknife on Loci                                                                7.5
+                                                                                  13.4
+**************************************************************************************
+
+Population: 1/2,	2 Samples,	Sample Sizes: 50/50
+
+TEMPORAL METHODS (Pollak, Nei/Tajima, Jorde/Ryman), Plan II.
+--------------------------------------------------------------------------------------
+Lowest Allele Frequency Used     0.050       0.020       0.010         0+
+======================================================================================
+Samples        1[1] & 2[2]
+Generations     0.0 & 1.5    
+
+   Independent Alleles =         115         130         132         132
+   -----------------------------------------------------------------------
+  (Pollak)
+   Harmonic Mean Samp Size =      50.0        50.0        50.0        50.0
+                 Fk =          0.08574     0.08590     0.08530     0.08530
+                 F' =          0.06574     0.06590     0.06530     0.06530
+               * Ne =             11.4        11.4        11.5        11.5
+
+     95% CIs for Ne:
+     * Parametric                  8.1         8.2         8.3         8.3
+                                  15.9        15.5        15.6        15.6
+     * Jackknife on Loci           8.3         8.7         8.8         8.8
+                                  15.4        14.7        14.9        14.9
+   -----------------------------------------------------------------------
+  (Nei/Tajima)
+   Harmonic Mean Samp Size =      50.0        50.0        50.0        50.0
+                 Fc =          0.08080     0.08128     0.08083     0.08083
+                 F' =          0.06080     0.06128     0.06083     0.06083
+               * Ne =             12.3        12.2        12.3        12.3
+
+     95% CIs for Ne:
+     * Parametric                  8.7         8.8         8.9         8.9
+                                  17.3        16.8        16.9        16.9
+     * Jackknife on Loci           9.1         9.4         9.5         9.5
+                                  16.6        15.8        15.9        15.9
+   -----------------------------------------------------------------------
+  (Jorde/Ryman)
+   Harmonic Mean Samp Size =      50.0        50.0        50.0        50.0
+                 Fs =          0.08396     0.08435     0.08440     0.08440
+                 F' =          0.06287     0.06324     0.06329     0.06329
+               * Ne =             11.9        11.9        11.9        11.9
+
+     95% CIs for Ne:
+     * Parametric                  9.0         9.2         9.2         9.2
+                                  15.2        14.9        14.9        14.9
+     * Jackknife on Loci           9.0         9.0         9.0         9.0
+                                  17.8        17.3        17.3        17.3
+==========================================================================
+
+Population     3 [3]  (Number of Individuals = 50)
+****************
+--------------------------------------------------------------------------------------
+Lowest Allele Frequency Used     0.050       0.020       0.010       No S*         0+
+--------------------------------------------------------------------------------------
+
+LINKAGE DISEQUILIBRIUM METHOD
+
+Harmonic Mean Sample Size =       50.0        50.0        50.0        50.0        50.0
+Independent Comparisons =       4928        6162        6488        6162        6488
+OverAll r^2 =                 0.027244    0.026559    0.025575    0.026559    0.025575
+Expected r^2 Sample =         0.021276    0.021276    0.021276    0.021276    0.021276
+Estimated Ne^ =                   53.7        61.0        75.4        61.0        75.4
+
+95% CIs for Ne^
+* Parametric                      44.9        51.2        61.9        51.2        61.9
+                                  65.6        74.2        94.8        74.2        94.8
+
+* JackKnife on Samples            36.5        41.8        52.2        41.8        52.2
+                                  88.7       100.5       124.1       100.5       124.1
+
+
+HETEROZYGOTE EXCESS METHOD
+
+Harmonic Mean Sample Size =       50.0        50.0        50.0                    50.0 
+Independent Alleles =            102         114         117                     117  
+Weighted Mean D =              0.01493     0.01510     0.01442                 0.01442
+Estimated Neb^  =                 34.0        33.6        35.2                    35.2
+
+95% CIs for Nb:
+* Parametric                      12.5        13.3        13.8                    13.8
+                              Infinite    Infinite    Infinite                Infinite
+
+MOLECULAR COANCESTRY METHOD
+
+Harmonic Mean Sample Size =                                                       50.0
+OverAll f1^    =                                                               0.02721
+Estimated Neb^ =                                                                  18.4
+
+95% CIs for Ne^
+* Jackknife on Loci                                                                8.6
+                                                                                  31.8
+**************************************************************************************
+
+Population     4 [4]  (Number of Individuals = 50)
+****************
+--------------------------------------------------------------------------------------
+Lowest Allele Frequency Used     0.050       0.020       0.010       No S*         0+
+--------------------------------------------------------------------------------------
+
+LINKAGE DISEQUILIBRIUM METHOD
+
+Harmonic Mean Sample Size =       50.0        50.0        50.0        50.0        50.0
+Independent Comparisons =       5224        6715        6943        6715        6943
+OverAll r^2 =                 0.028305    0.027446    0.026695    0.027446    0.026695
+Expected r^2 Sample =         0.021276    0.021276    0.021276    0.021276    0.021276
+Estimated Ne^ =                   45.3        51.9        59.4        51.9        59.4
+
+95% CIs for Ne^
+* Parametric                      38.7        44.6        50.5        44.6        50.5
+                                  53.6        61.2        71.1        61.2        71.1
+
+* JackKnife on Samples            32.2        40.7        46.0        40.7        46.0
+                                  68.7        68.9        80.5        68.9        80.5
+
+
+HETEROZYGOTE EXCESS METHOD
+
+Harmonic Mean Sample Size =       50.0        50.0        50.0                    50.0 
+Independent Alleles =            105         119         121                     121  
+Weighted Mean D =             -0.00146     0.00268     0.00250                 0.00250
+Estimated Neb^  =             Infinite       187.3       200.2                   200.2
+
+95% CIs for Nb:
+* Parametric                      19.9        19.7        20.1                    20.1
+                              Infinite    Infinite    Infinite                Infinite
+
+MOLECULAR COANCESTRY METHOD
+
+Harmonic Mean Sample Size =                                                       50.0
+OverAll f1^    =                                                               0.02061
+Estimated Neb^ =                                                                  24.3
+
+95% CIs for Ne^
+* Jackknife on Loci                                                               10.1
+                                                                                  44.5
+**************************************************************************************
+
+Population: 3/4,	2 Samples,	Sample Sizes: 50/50
+
+TEMPORAL METHODS (Pollak, Nei/Tajima, Jorde/Ryman), Plan II.
+--------------------------------------------------------------------------------------
+Lowest Allele Frequency Used     0.050       0.020       0.010         0+
+======================================================================================
+Samples        1[3] & 2[4]
+Generations     0.0 & 1.5    
+
+   Independent Alleles =         113         135         138         138
+   -----------------------------------------------------------------------
+  (Pollak)
+   Harmonic Mean Samp Size =      50.0        50.0        50.0        50.0
+                 Fk =          0.10260     0.09753     0.09641     0.09641
+                 F' =          0.08260     0.07753     0.07641     0.07641
+               * Ne =              9.1         9.7         9.8         9.8
+
+     95% CIs for Ne:
+     * Parametric                  6.5         7.1         7.2         7.2
+                                  12.4        13.0        13.1        13.1
+     * Jackknife on Loci           7.1         7.7         7.9         7.9
+                                  11.5        12.0        12.1        12.1
+   -----------------------------------------------------------------------
+  (Nei/Tajima)
+   Harmonic Mean Samp Size =      50.0        50.0        50.0        50.0
+                 Fc =          0.09703     0.09327     0.09236     0.09236
+                 F' =          0.07703     0.07327     0.07236     0.07236
+               * Ne =              9.7        10.2        10.4        10.4
+
+     95% CIs for Ne:
+     * Parametric                  6.9         7.5         7.6         7.6
+                                  13.4        13.8        13.9        13.9
+     * Jackknife on Loci           7.6         8.2         8.3         8.3
+                                  12.3        12.7        12.8        12.8
+   -----------------------------------------------------------------------
+  (Jorde/Ryman)
+   Harmonic Mean Samp Size =      50.0        50.0        50.0        50.0
+                 Fs =          0.10383     0.10439     0.10446     0.10446
+                 F' =          0.08202     0.08256     0.08263     0.08263
+               * Ne =              9.1         9.1         9.1         9.1
+
+     95% CIs for Ne:
+     * Parametric                  6.9         7.0         7.1         7.1
+                                  11.7        11.4        11.3        11.3
+     * Jackknife on Loci           6.9         6.9         6.9         6.9
+                                  13.4        13.2        13.2        13.2
+==========================================================================
+
+Population     5 [5]  (Number of Individuals = 50)
+****************
+--------------------------------------------------------------------------------------
+Lowest Allele Frequency Used     0.050       0.020       0.010       No S*         0+
+--------------------------------------------------------------------------------------
+
+LINKAGE DISEQUILIBRIUM METHOD
+
+Harmonic Mean Sample Size =       50.0        50.0        50.0        50.0        50.0
+Independent Comparisons =       5027        5947        6271        5947        6271
+OverAll r^2 =                 0.026815    0.026525    0.025909    0.026525    0.025909
+Expected r^2 Sample =         0.021276    0.021276    0.021276    0.021276    0.021276
+Estimated Ne^ =                   58.0        61.4        69.8        61.4        69.8
+
+95% CIs for Ne^
+* Parametric                      48.2        51.4        57.8        51.4        57.8
+                                  71.6        75.0        86.8        75.0        86.8
+
+* JackKnife on Samples            41.8        46.0        51.9        46.0        51.9
+                                  87.6        87.4       101.2        87.4       101.2
+
+
+HETEROZYGOTE EXCESS METHOD
+
+Harmonic Mean Sample Size =       50.0        50.0        50.0                    50.0 
+Independent Alleles =            103         112         115                     115  
+Weighted Mean D =              0.03112     0.02790     0.02689                 0.02689
+Estimated Neb^  =                 16.6        18.4        19.1                    19.1
+
+95% CIs for Nb:
+* Parametric                       9.9        10.9        11.2                    11.2
+                                  54.1        65.1        70.1                    70.1
+
+MOLECULAR COANCESTRY METHOD
+
+Harmonic Mean Sample Size =                                                       50.0
+OverAll f1^    =                                                               0.00212
+Estimated Neb^ =                                                                 235.9
+
+95% CIs for Ne^
+* Jackknife on Loci                                                                0.2
+                                                                                1184.3
+**************************************************************************************
+
+Population     6 [6]  (Number of Individuals = 50)
+****************
+--------------------------------------------------------------------------------------
+Lowest Allele Frequency Used     0.050       0.020       0.010       No S*         0+
+--------------------------------------------------------------------------------------
+
+LINKAGE DISEQUILIBRIUM METHOD
+
+Harmonic Mean Sample Size =       50.0        50.0        50.0        50.0        50.0
+Independent Comparisons =       5427        6383        6383        6383        6383
+OverAll r^2 =                 0.026833    0.026642    0.026423    0.026642    0.026423
+Expected r^2 Sample =         0.021276    0.021276    0.021276    0.021276    0.021276
+Estimated Ne^ =                   57.8        60.0        62.6        60.0        62.6
+
+95% CIs for Ne^
+* Parametric                      48.4        50.6        52.6        50.6        52.6
+                                  70.7        72.5        76.2        72.5        76.2
+
+* JackKnife on Samples            38.1        42.3        44.1        42.3        44.1
+                                 102.1        93.9        98.6        93.9        98.6
+
+
+HETEROZYGOTE EXCESS METHOD
+
+Harmonic Mean Sample Size =       50.0        50.0        50.0                    50.0 
+Independent Alleles =            107         116         116                     116  
+Weighted Mean D =              0.01615     0.01272     0.01272                 0.01272
+Estimated Neb^  =                 31.4        39.8        39.8                    39.8
+
+95% CIs for Nb:
+* Parametric                      13.7        15.3        15.3                    15.3
+                              Infinite    Infinite    Infinite                Infinite
+
+MOLECULAR COANCESTRY METHOD
+
+Harmonic Mean Sample Size =                                                       50.0
+OverAll f1^    =                                                               0.01380
+Estimated Neb^ =                                                                  36.2
+
+95% CIs for Ne^
+* Jackknife on Loci                                                                9.9
+                                                                                  79.4
+**************************************************************************************
+
+Population: 5/6,	2 Samples,	Sample Sizes: 50/50
+
+TEMPORAL METHODS (Pollak, Nei/Tajima, Jorde/Ryman), Plan II.
+--------------------------------------------------------------------------------------
+Lowest Allele Frequency Used     0.050       0.020       0.010         0+
+======================================================================================
+Samples        1[5] & 2[6]
+Generations     0.0 & 1.5    
+
+   Independent Alleles =         113         128         132         132
+   -----------------------------------------------------------------------
+  (Pollak)
+   Harmonic Mean Samp Size =      50.0        50.0        50.0        50.0
+                 Fk =          0.10041     0.09779     0.09542     0.09542
+                 F' =          0.08041     0.07779     0.07542     0.07542
+               * Ne =              9.3         9.6         9.9         9.9
+
+     95% CIs for Ne:
+     * Parametric                  6.7         7.0         7.3         7.3
+                                  12.8        13.0        13.4        13.4
+     * Jackknife on Loci           7.4         7.8         8.2         8.2
+                                  11.6        11.8        12.0        12.0
+   -----------------------------------------------------------------------
+  (Nei/Tajima)
+   Harmonic Mean Samp Size =      50.0        50.0        50.0        50.0
+                 Fc =          0.09527     0.09330     0.09135     0.09135
+                 F' =          0.07527     0.07330     0.07135     0.07135
+               * Ne =             10.0        10.2        10.5        10.5
+
+     95% CIs for Ne:
+     * Parametric                  7.1         7.4         7.6         7.6
+                                  13.7        13.9        14.2        14.2
+     * Jackknife on Loci           7.9         8.2         8.6         8.6
+                                  12.5        12.7        12.8        12.8
+   -----------------------------------------------------------------------
+  (Jorde/Ryman)
+   Harmonic Mean Samp Size =      50.0        50.0        50.0        50.0
+                 Fs =          0.10532     0.10518     0.10510     0.10510
+                 F' =          0.08345     0.08332     0.08325     0.08325
+               * Ne =              9.0         9.0         9.0         9.0
+
+     95% CIs for Ne:
+     * Parametric                  6.8         6.9         7.0         7.0
+                                  11.5        11.3        11.3        11.3
+     * Jackknife on Loci           6.5         6.5         6.5         6.5
+                                  14.6        14.7        14.7        14.7
+==========================================================================
+
+Population     7 [7]  (Number of Individuals = 50)
+****************
+--------------------------------------------------------------------------------------
+Lowest Allele Frequency Used     0.050       0.020       0.010       No S*         0+
+--------------------------------------------------------------------------------------
+
+LINKAGE DISEQUILIBRIUM METHOD
+
+Harmonic Mean Sample Size =       50.0        50.0        50.0        50.0        50.0
+Independent Comparisons =       5634        7065        7299        7065        7299
+OverAll r^2 =                 0.028151    0.026949    0.026287    0.026949    0.026287
+Expected r^2 Sample =         0.021276    0.021276    0.021276    0.021276    0.021276
+Estimated Ne^ =                   46.3        56.6        64.4        56.6        64.4
+
+95% CIs for Ne^
+* Parametric                      39.8        48.5        54.5        48.5        54.5
+                                  54.7        67.2        77.6        67.2        77.6
+
+* JackKnife on Samples            31.9        43.1        49.1        43.1        49.1
+                                  74.0        78.5        89.4        78.5        89.4
+
+
+HETEROZYGOTE EXCESS METHOD
+
+Harmonic Mean Sample Size =       50.0        50.0        50.0                    50.0 
+Independent Alleles =            109         122         124                     124  
+Weighted Mean D =             -0.00066    -0.00155    -0.00166                -0.00166
+Estimated Neb^  =             Infinite    Infinite    Infinite                Infinite
+
+95% CIs for Nb:
+* Parametric                      21.4        23.9        24.4                    24.4
+                              Infinite    Infinite    Infinite                Infinite
+
+MOLECULAR COANCESTRY METHOD
+
+Harmonic Mean Sample Size =                                                       50.0
+OverAll f1^    =                                                               0.03040
+Estimated Neb^ =                                                                  16.4
+
+95% CIs for Ne^
+* Jackknife on Loci                                                               10.2
+                                                                                  24.2
+**************************************************************************************
+
+Population     8 [8]  (Number of Individuals = 50)
+****************
+--------------------------------------------------------------------------------------
+Lowest Allele Frequency Used     0.050       0.020       0.010       No S*         0+
+--------------------------------------------------------------------------------------
+
+LINKAGE DISEQUILIBRIUM METHOD
+
+Harmonic Mean Sample Size =       50.0        50.0        50.0        50.0        50.0
+Independent Comparisons =       5841        7413        7655        7413        7655
+OverAll r^2 =                 0.025852    0.025426    0.024936    0.025426    0.024936
+Expected r^2 Sample =         0.021276    0.021276    0.021276    0.021276    0.021276
+Estimated Ne^ =                   70.7        78.2        89.0        78.2        89.0
+
+95% CIs for Ne^
+* Parametric                      58.0        64.7        72.5        64.7        72.5
+                                  88.9        97.4       113.3        97.4       113.3
+
+* JackKnife on Samples            50.0        54.9        60.6        54.9        60.6
+                                 111.6       125.4       152.6       125.4       152.6
+
+
+HETEROZYGOTE EXCESS METHOD
+
+Harmonic Mean Sample Size =       50.0        50.0        50.0                    50.0 
+Independent Alleles =            111         125         127                     127  
+Weighted Mean D =             -0.01123    -0.01093    -0.01091                -0.01091
+Estimated Neb^  =             Infinite    Infinite    Infinite                Infinite
+
+95% CIs for Nb:
+* Parametric                      41.5        46.3        47.7                    47.7
+                              Infinite    Infinite    Infinite                Infinite
+
+MOLECULAR COANCESTRY METHOD
+
+Harmonic Mean Sample Size =                                                       50.0
+OverAll f1^    =                                                              -0.00898
+Estimated Neb^ =                                                              Infinite
+
+95% CIs for Ne^
+* Jackknife on Loci                                                           Infinite
+                                                                              Infinite
+**************************************************************************************
+
+Population: 7/8,	2 Samples,	Sample Sizes: 50/50
+
+TEMPORAL METHODS (Pollak, Nei/Tajima, Jorde/Ryman), Plan II.
+--------------------------------------------------------------------------------------
+Lowest Allele Frequency Used     0.050       0.020       0.010         0+
+======================================================================================
+Samples        1[7] & 2[8]
+Generations     0.0 & 1.5    
+
+   Independent Alleles =         120         134         135         136
+   -----------------------------------------------------------------------
+  (Pollak)
+   Harmonic Mean Samp Size =      50.0        50.0        50.0        50.0
+                 Fk =          0.11029     0.10321     0.10316     0.10270
+                 F' =          0.09029     0.08321     0.08316     0.08270
+               * Ne =              8.3         9.0         9.0         9.1
+
+     95% CIs for Ne:
+     * Parametric                  6.0         6.6         6.6         6.7
+                                  11.2        12.0        12.0        12.1
+     * Jackknife on Loci           6.0         6.7         6.7         6.7
+                                  11.3        11.9        11.9        12.0
+   -----------------------------------------------------------------------
+  (Nei/Tajima)
+   Harmonic Mean Samp Size =      50.0        50.0        50.0        50.0
+                 Fc =          0.10539     0.09962     0.09960     0.09922
+                 F' =          0.08539     0.07962     0.07960     0.07922
+               * Ne =              8.8         9.4         9.4         9.5
+
+     95% CIs for Ne:
+     * Parametric                  6.3         6.9         6.9         7.0
+                                  11.9        12.6        12.6        12.6
+     * Jackknife on Loci           6.3         7.0         7.0         7.1
+                                  11.9        12.4        12.4        12.5
+   -----------------------------------------------------------------------
+  (Jorde/Ryman)
+   Harmonic Mean Samp Size =      50.0        50.0        50.0        50.0
+                 Fs =          0.12982     0.12974     0.12981     0.12983
+                 F' =          0.10681     0.10673     0.10680     0.10681
+               * Ne =              7.0         7.0         7.0         7.0
+
+     95% CIs for Ne:
+     * Parametric                  5.4         5.4         5.4         5.5
+                                   8.9         8.8         8.8         8.8
+     * Jackknife on Loci           5.2         5.2         5.2         5.2
+                                  10.9        10.9        10.9        10.9
+==========================================================================
+
+Ending time: Wed Dec 13 09:54:27 2017
+-------------------------------------
+

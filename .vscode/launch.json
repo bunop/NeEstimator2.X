@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) Launch",
+            "name": "Debug Ne2x (with i:info + o:option)",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/Ne2x",
@@ -14,23 +14,88 @@
                 "o:test_option.txt"
             ],
             "stopAtEntry": false,
-            "cwd": "${fileDirname}",
+            "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
+            "preLaunchTask": "Build Ne2x Debug",
             "setupCommands": [
                 {
-                    "description": "Abilita la riformattazione per gdb",
+                    "description": "Enable pretty printing for gdb",
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 },
                 {
-                    "description": "Imposta Versione Disassembly su Intel",
+                    "description": "Set disassembly flavor to Intel",
                     "text": "-gdb-set disassembly-flavor intel",
                     "ignoreFailures": true
                 }
             ]
+        },
+        {
+            "name": "Debug Ne2x (interactive mode)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/Ne2x",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "preLaunchTask": "Build Ne2x Debug",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "Debug Ne2x (multi files)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/Ne2x",
+            "args": [
+                "m:test_multi.txt"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "preLaunchTask": "Build Ne2x Debug",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "Debug Ne2x (stop at main)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/Ne2x",
+            "args": [
+                "i:test_info.txt",
+                "o:test_option.txt"
+            ],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "preLaunchTask": "Build Ne2x Debug",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
         }
-
     ]
 }
