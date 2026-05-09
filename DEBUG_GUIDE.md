@@ -1,6 +1,7 @@
 # Debugging Guide with VS Code + GDB
 
 Welcome to the Ne2x Debugging Guide! This document will help you set up and use Visual Studio Code (VS Code) with GDB to debug the Ne2x program effectively.
+
 ## Prerequisites
 - **VS Code**: Make sure you have [Visual Studio Code](https://code.visualstudio.com/) installed.
 - **C/C++ Extension**: Install the official [C/C++ extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) by Microsoft.
@@ -17,15 +18,15 @@ The `.vscode/launch.json` file contains several debug configurations tailored fo
 
 ### 2. **Debug Ne2x (interactive mode)**
    - Executes: `./Ne2x` (no arguments)
-   - To test interactive mode
+   - Use this to test interactive mode
 
 ### 3. **Debug Ne2x (multi files)**
    - Executes: `./Ne2x m:multi_input.txt`
-   - To test multiple files mode
+   - Use this to test multiple-files mode
 
 ### 4. **Debug Ne2x (stop at main)** 🔍
    - Like #1 but stops at the beginning of main
-   - Useful for step-by-step from the start
+   - Useful for stepping through from the start
 
 ## How to Use the Debugger
 
@@ -189,6 +190,41 @@ In `tasks.json` the "Build Ne2x Debug" task uses:
 ### Variables show `<optimized out>`
 → Compile with `-O0` (already done in Build Ne2x Debug)
 
+## Agent Workflow for C/C++ Debugging
+
+This project includes AI customization files that complement GDB debugging.
+
+- Instruction file: `.github/instructions/c-memory-safety.instructions.md`
+- Prompt file: `.github/prompts/run-core-validation.prompt.md`
+- Skill file: `.github/skills/investigate-regression-mismatch/SKILL.md`
+
+### When to use each one
+
+1. `c-memory-safety.instructions.md`
+   - Use when editing memory-sensitive C/C++ code (`Ne2x.c`, related headers, wrapper boundary).
+   - It enforces safe ownership and cleanup patterns and reminds the required validation flow.
+
+2. `/run-core-validation`
+   - Use after any non-trivial C/C++ change.
+   - It runs the standard sequence from repo root:
+     - `make`
+     - `make test`
+     - `make asan`
+     - `./Ne2x_asan i:test_info.txt o:test_option.txt`
+   - It returns a compact PASS/FAIL report and the first failing excerpt.
+
+3. `/investigate-regression-mismatch`
+   - Use when `make test` fails or C and C++ outputs diverge.
+   - It helps classify differences (timestamp-only vs scientific mismatch), point to likely code areas, and propose the smallest safe fix.
+
+### Recommended debug loop
+
+1. Reproduce with GDB using one of the launch configurations.
+2. Fix the issue with minimal localized edit (prefer C core parity-safe changes).
+3. Run `/run-core-validation`.
+4. If regression still fails, run `/investigate-regression-mismatch`.
+5. Re-run the same debug scenario to confirm behavior and stability.
+
 ## Quick Start for Today
 
 ```bash
@@ -203,4 +239,4 @@ In `tasks.json` the "Build Ne2x Debug" task uses:
 
 ---
 
-Happy Debugging! 🐛🔍
+Happy debugging.

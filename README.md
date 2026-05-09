@@ -1,14 +1,14 @@
 
 # NeEstimator2.X
 
-This repository contain the source code of NeEstimator v2.x software (see
+This repository contains the source code of NeEstimator v2.x software (see
 [NeEstimator software](http://www.molecularfisherieslaboratory.com.au/neestimator-software/)
 at [Molecular Fisheries Laboratory](http://www.molecularfisherieslaboratory.com.au/))
-received from Jennifer Ovenden and maintained by NeEstimator development team
+received from Jennifer Ovenden and maintained by the NeEstimator development team
 until 2019.
 
 This folder contains the source code of NeEstimator v2.x binary software and the
-java application which wraps the binary software and provide a GUI interface.
+Java application, which wraps the binary software and provides a GUI interface.
 
 ## Porting intent
 
@@ -25,7 +25,7 @@ In this phase:
 This allows modernization (tooling, diagnostics, future refactors) without
 rewriting the estimation algorithms up front.
 
-## Build (linux)
+## Build (Linux)
 
 From project root:
 
@@ -101,7 +101,34 @@ Expected success message:
 PASS: C and C++ wrapper outputs are identical for test_info/test_option.
 ```
 
-## Run with the GUI (linux)
+## AI customization for this project (VS Code)
+
+This repository includes project-level customization files for coding agents:
+
+- Instruction: `.github/instructions/c-memory-safety.instructions.md`
+- Prompt: `.github/prompts/run-core-validation.prompt.md`
+- Skill: `.github/skills/investigate-regression-mismatch/SKILL.md`
+
+How to use them:
+
+1. `c-memory-safety.instructions.md`
+	- Auto-applies on C/C++ files (`*.c`, `*.h`, `*.cpp`).
+	- Use it when touching memory-sensitive code paths, especially in `Ne2x.c`.
+	- It enforces a safety checklist and the expected validation sequence (`make`, `make test`, `make asan`, `./Ne2x_asan ...`).
+
+2. `/run-core-validation`
+	- Type `/` in chat and select `Run Core Validation`.
+	- Runs the standard validation flow and returns a compact PASS/FAIL summary with the first failing excerpt and likely root cause.
+	- You can provide an optional extra scenario argument.
+
+3. `/investigate-regression-mismatch`
+	- Type `/` in chat and select `investigate-regression-mismatch`.
+	- Use it when `make test` fails or C/C++ outputs diverge.
+	- It classifies differences (timestamp-only vs real scientific mismatch), points to likely files, proposes the smallest safe fix, and revalidates with `make test`.
+
+Tip: keep these customizations in sync with `AGENTS.md` when build/test workflows change.
+
+## Run with the GUI (Linux)
 
 To use the compiled binary with the GUI application, the binary software must be
 in the same directory as the GUI application. Place
