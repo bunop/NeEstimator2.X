@@ -17,6 +17,14 @@ run_case() {
   fi
 }
 
+normalize_output() {
+  local input_file="$1"
+  local output_file="$2"
+
+  # Ignore runtime-dependent timestamps so comparisons focus on results.
+  grep -vE '^(Starting time:|Ending time:|Time: )' "$input_file" > "$output_file"
+}
+
 work_dir=".regression"
 baseline_dir="${work_dir}/baseline"
 current_dir="${work_dir}/current"
@@ -34,11 +42,18 @@ echo "[3/4] Run wrapper (C++)"
 run_case "Ne2x_cpp" "cpp" "${current_dir}"
 
 echo "[4/4] Compare outputs"
-cmp -s "${baseline_dir}/c.stdout" "${current_dir}/cpp.stdout"
-cmp -s "${baseline_dir}/c.test_Ne.txt" "${current_dir}/cpp.test_Ne.txt"
+normalize_output "${baseline_dir}/c.stdout" "${baseline_dir}/c.stdout.norm"
+normalize_output "${current_dir}/cpp.stdout" "${current_dir}/cpp.stdout.norm"
+cmp -s "${baseline_dir}/c.stdout.norm" "${current_dir}/cpp.stdout.norm"
+
+normalize_output "${baseline_dir}/c.test_Ne.txt" "${baseline_dir}/c.test_Ne.txt.norm"
+normalize_output "${current_dir}/cpp.test_Ne.txt" "${current_dir}/cpp.test_Ne.txt.norm"
+cmp -s "${baseline_dir}/c.test_Ne.txt.norm" "${current_dir}/cpp.test_Ne.txt.norm"
 
 if [[ -f "${baseline_dir}/c.test_NexLD.txt" || -f "${current_dir}/cpp.test_NexLD.txt" ]]; then
-  cmp -s "${baseline_dir}/c.test_NexLD.txt" "${current_dir}/cpp.test_NexLD.txt"
+  normalize_output "${baseline_dir}/c.test_NexLD.txt" "${baseline_dir}/c.test_NexLD.txt.norm"
+  normalize_output "${current_dir}/cpp.test_NexLD.txt" "${current_dir}/cpp.test_NexLD.txt.norm"
+  cmp -s "${baseline_dir}/c.test_NexLD.txt.norm" "${current_dir}/cpp.test_NexLD.txt.norm"
 fi
 
 echo "PASS: C and C++ wrapper outputs are identical for test_info/test_option."
