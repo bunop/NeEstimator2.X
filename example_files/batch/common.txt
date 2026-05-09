@@ -1,0 +1,278 @@
+15	0	* Method(s) expressed by M and possibly T (details below)
+3		* number of (positive) critical values C
+0.05  0.02  0.01	* Critical values (have this line only if C > 0)
+0  0  1.5	* Generations (have this line only if Temporal is included)
+15  0  1	* Methods to have outputs in tabular-format (details below)
+1		* 1 for output Confidence Intervals, 0 if none
+0		* mating model, 0: random, 1: monogamy (if LD is included)
+0		* max individual to be processed per pop, 0 for no limit
+0		* Pop. range to run, given in pair. No limit if the first = 0
+0		* Loc. ranges to run, given in pairs. No limit if the 1st = 0
+myCommon.out	* name for common (main) output file
+test1.gen	* this and subsequent lines are for input file names.
+test2.txt
+test3.gen
+*
+
+Either an empty line, or a line starting with an asterisk, will end the list
+of input file names. Asterisks are used to mark the end of data for the lines,
+they are optional, used to insert comments.
+
+To run Ne2 with input files listed in this file, open a terminal at the
+directory containing the executable Ne2, this control file, and all input
+files mentioned in this file.
+Then issue command line (assuming this file is named "common.txt"):
+	  Ne2 c:common.txt	(Windows)
+	./Ne2M c:common.txt	(Mac)
+	./Ne2L c:common.txt	(Linux)
+(preceding the name of this file are two preset key characters:
+letter 'c' followed by a colon ':').
+
+General Instructions
+--------------------
+All input files are run with the same method(s) and options.
+The leading lines, up to 10 lines, are for these common settings.
+One line less if there is no temporal method (M < 8 on line 1).
+One line less if no positive critical values (C = 0 on line 2).
+One line less if no Linkage Disequilibrium method (when M is an even number on line 1).
+Thus, common settings require 7 to 10 lines.
+Then they are followed by the name for the main output file.
+Extra output files will be named based on the name of main output.
+Subsequent lines are for the names of input files to be run.
+Each output file is for outputs of all input files listed here.
+
+Each line can be terminated by a white space (blank or tab) followed by an
+asterisk (then comments can be put on the line after the asterisk).
+Note that the asterisk should be after a white space,
+unless at the line for output file name, where the asterisk will play a role
+(see details for line 11 below).
+
+
+DETAILS
+-------
+Line numbering assumes positive critical values are desired, and LD, temporal
+methods are included.
+ 
+Line 1:  A number M from 1 to 15 to indicate which method(s) to run:
+                  M = 1 for Linkage Disequilibrium method (LD),
+                  M = 2 for Heterozygote Excess method (Ht),
+                  M = 4 for Molecular Coancestry method (Cn),
+                  M = 8 for Temporal methods (Tp).
+
+         For multiple methods, M is the sum of the designated method numbers.
+         Examples: M = 3 = LD + Ht; M = 9 = LD + Tp.
+
+         A second number T can be entered to indicate which temporal methods
+         to run (if temporal is indicated by entry M >= 8). T can be any
+         number at least 0.
+         * If T = 0, or T is at least 7, or T is absent, then all temporal
+           methods are included. If T is absent, there should be a non-digit
+           character, e.g. an asterisk, following at least a blank after
+           entry M.
+         * If 1 < T < 7, then T is one or is the sum of two of the following:
+           1 (Pollak method), 2 (Nei/Tajima method), 4 (Jorde/Ryman method).
+           The temporal method(s) to run will be the ones that make up T.
+           This is similar to how M is designated.
+           (If M < 8, i.e., no temporal methods, then T is ignored.)
+
+Line 2:  A number C for the number of POSITIVE critical values. If C > 0, the
+         next line should list all C critical values. If C = 0, there should
+         be no line for critical values. (Molecular Coancestry method will
+         ignore all positive critical values. But even if M = 4 on line 1,
+         i.e., only Molecular Coancestry being run, the list of critical
+         values must be entered on the next line if C > 0 is entered here.)
+
+Line 3:  Lists all positive critical values as said on line 2.
+         This line exists only if entry C on line 2 is positive.
+         Critical value 0 will be automatically added to the list.
+         To exclude value 0, enter "-1" after the last critical value.
+         If -1 is inserted after any value listed here, the list will stop
+         at that value, regardless of the value of C.
+         Examples. Suppose C = 3.
+         * If line 3 consists of
+        	0.05  0.02  0.01
+           then list of critical values is 0.05, 0.02, 0.01, and 0.
+         * If line 3 consists of
+        	0.05  0.02  0.01 -1
+           then list of critical values is 0.05, 0.02, 0.01 (no zero).
+         * If line 3 consists of
+        	0.05  -1  0.02  0.01
+           then list of critical values is 0.05 (no zero).
+         * If line 3 consists of
+        	-1  0.05  0.02  0.01
+           then the list of critical values consists of ONLY 0, the effect is
+           the same as C = 0.
+
+Line 4:  For "Generation Set" in Temporal methods when M on line 1 is
+         at least 8. (This line exists only if temporal is included.)
+         A generation set consists of a number N followed by
+         at least two ascending numbers for generations (these numbers can
+         have decimals). The generation set applies to the whole input file.
+         If N = 0, temporal method(s) will assume Plan II.
+         If N > 0, then temporal method(s) will assume Plan I and N is
+         the census population size.
+
+Line 5:  A number M+ to indicate if extra ouput files in tabular format will
+         be written for any or all methods indicated on line 1.
+         The value of M+ is constructed in the same way as M on line 1.
+         If M+ = 0, no extra outputs will be written.
+
+         * Note: If M+ indicates a method not included by M, that method will
+         be ignored. For example, if M = 5 (LD and Molecular Coancestry), and
+         M+ = 2 (Het-Excess), then no method will have extra output file,
+         the effect is the same as M+ = 0. Essentially, anything to be put
+         in extra files must be included in the main output file.
+
+         * If M+ includes temporal methods, then a second number T+ can be
+         entered to indicate which temporal method(s) to be outputted in
+         extra file. This T+ is interpreted the same way as T on line 1.
+         Therefore, if T+ = 0, or is absent, all temporal methods for main
+         output file will be in extra output file as well.
+         
+         However, if this T+ conflicts with T on line 1, in the sense that
+         none of the methods it indicates is in the main output file, then
+         the value of T+ will be ignored (as it is not entered or it is 0).
+         
+         For example, if M+ = M = 8, and T = 3 (Pollak and Nei/Tajima in the
+         main output), but T+ = 4 (Jorde/Ryman), then this T+ conflicts with
+         T, so will be ignored. As a result, Pollak and Nei/Tajima methods
+         being in main output file will also be in extra output file.
+         With the same example, but now T+ = 5 (Pollak and Jorde/Ryman), then
+         it is not considered a conflict with T since it has Pollak method
+         in common; so only Pollak method is in extra output file.
+
+         * A third number C+ is entered for limitation on critical values
+         outputted to all extra output files. To be a third, there must be a
+         second on the line, which is T+, even no temporal output (T+ is
+         then ignored but must be entered, such as T+ = 0).
+         The number C+ is for the number of highest critical values outputted
+         to extra files.
+         For example, if positive critical values are 0.05, 0.02 (C = 2), and
+         C+ = 1, then only critical value 0.05 is on all extra output files.
+
+         If C+ = 0, only critical value 0 is on the extra output files.
+         If C+ > C (number of POSITIVE critical values), or C+ is ABSENT,
+         then all critical values, including 0, will be on extra output files.
+         
+         * A fourth number F can be entered for format of these tabular output
+         files. If F is positive (e.g. F = 1), then a tab delimiter will
+         separate any pair of outputted values. Under this format, the files
+         will occupy a larger number of columns in a text editor, but when
+         the files are pasted into an Excel sheet, values will be separated
+         into distinct columns. If F = 0, then output files will occupy less
+         columns and have a better look with a text editor.
+         
+         The default is F = 0, i.e., without this entry, format for these
+         output files will have NO tab delimiter.
+         --------------------------------------------------------------------
+
+         The following are samples of line 5 and their meanings.
+         Note that except the first entry, the default values for others are:
+         	Second entry = 0,	(all temporal methods)
+         	Third entry = 10,	(all critical values)
+         	Fourth entry = 0.	(No tab-delimiter in the format)
+         Examples:
+         --------
+         (1) 11
+             Only one entry 11 = 1(LD) + 2(Ht) + 8(Tp). Then LD, Het-Excess,
+             and all temporal methods as specified on line 1, for all critical
+             values, are outputted in tabular-format output files,
+             without Tab-delimiter in the format.
+
+         (2) 11  1
+             Second entry = 1, so only outputs for Pollak method will be in
+             tabular-format output file - still all critical values, and no
+             Tab-delimiter in the format.
+
+         (3) 11  0  1
+             Second entry = 0, all temporal methods as specified on line 1
+             will be in tabular-format output file. Third entry = 1: only the
+             top 1 critical value is in this output file, but still no
+             Tab-delimiter in the format.
+
+         (4) 11  0  1  1
+             Fourth entry = 1: Tab-delimiter in the format.
+
+         NAMES for EXTRA OUTPUT Files
+         ----------------------------
+         From the name of the main output file, the extension is removed to
+         obtain the principal name, Then the following suffixes are added to
+         the principal name to make the names for extra output files:
+
+         * For LD, suffix = "xLD.txt"
+         * For Het-Excess, suffix = "xHt.txt"
+         * For Molecular Coancestry, suffix = "xCn.txt"
+         * For Temporal, suffix = "xTp.txt"
+
+         Examples: (All names are enclosed by double quotes.)
+         (a) Suppose the main output is "main.out" or "main" (no extension).
+             Then the principal name is "main"; so
+               * Extra output file name for LD: "mainxLD.txt"
+               * Extra output file name for Het-Excess: "mainxHt.txt"
+               * Extra output file name for Molecular Coan.: "mainxCn.txt"
+               * Extra output file name for Temporal: "mainxTp.txt"
+
+         (b) Suppose the main output is "main.txt.out". Then the extension is
+             "out", the principal name is "main.txt". So
+               * Extra output file name for LD: "main.txtxLD.txt"
+               * Extra output file name for Het-Excess: "main.txtxHt.txt"
+               * Extra output file name for Molecular Coan: "main.txtxCn.txt"
+               * Extra output file name for Temporal: "main.txtxTp.txt"
+
+Line 6:  Enter 1 if confidence intervals are desired (both parametric and
+         non-parametric when applicable); 0 otherwise.
+
+Line 7:  Mating model for LD: enter 0 for Random, 1 for Monogamy.
+         This line must exist if LD is to be run, i.e.,
+         when entry M on line 1 is an odd number
+         This line must be omitted if no LD to be run (M is even).
+
+Line 8:  A number S for the maximum number of individuals in each population
+         to be processed, starting from the first individual.
+         If S = 0, no restriction.
+
+Line 9:  Either one number P or two numbers P, Q are entered to restrict
+         the processing of populations in all input files.
+         If P = 0: no restriction (Q if entered will be ignored).
+         If P > 0 and no Q entered, then populations up to population P will
+         be processed.
+         If both P and Q are entered (they should be positive) and P <= Q,
+         then populations to be processed will be in the range from P to Q.
+         However, if P > Q, the second entry Q is erroneous, and is rejected,
+         therefore, it is assumed only one entry P is entered.
+
+         Note that when temporal is in place, then generation set should be
+         applied starting from the first population in the range.
+
+Line 10: Enter ranges of loci in pairs; each pair must be in ascending order,
+         representing one range. For examples,
+              2  7   10  10   30  45
+         are 3 ranges of loci: [2, 7], [10, 10], and [30, 45].
+         Thus, only loci from 2 to 7 (6 loci), locus 10,  and loci from 30 to
+         45 (16 loci) will be processed (total 23 loci).
+         If a pair contains a zero or its two members are not in ascending
+         order, then all entries from that pair and beyond will be ignored.
+         In particular, if 0 is the first entry, then all entries will be
+         ignored, so there will be no restriction.
+         It is okay for the ranges to overlap, e.g.,
+              2  5    3  10
+         (Here, we have two ranges: [2, 5] and [3, 10] overlap each other.)
+         If an odd number of entries are on this line, then the last entry,
+         which is not paired with any, will be ignored.
+
+Line 11: Name of main output file. This name will be used for naming extra
+         output files as described for line 5 above.
+         In general, all output files if existed will be overwritten starting
+         with outputs for the first input file (then appended for subsequent
+         input files).
+         If output files need to be appended beginning with outputs for the
+         first input file, then an asterisk should immediately follows the
+         name of main output file (no white space in between).
+
+Line 12 and beyond are for list of input file names, one name per line,
+         the name can be terminated by an asterisk.
+         If any file is not in the same directory of the executable Ne2,
+         its full path name should be given.
+
+         An empty line or a line having an asterisk as the leading character
+         will terminate the list.
