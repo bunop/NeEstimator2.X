@@ -18,6 +18,8 @@
 #include <ctype.h>
 #include <math.h>
 
+#include "Ne2x_api.h"
+
 //#define INFINITE	(float) 9999999
 //#define EPSILON		(float) 0.0000001	// used to compare a number with zero
 #define INFINITE	(float) 10E10
@@ -225,8 +227,7 @@ int RunMultiCommon (char *mFileName);
 int RunOption (char misFilSuf[], char LocSuf[], char BurSuf[],
 				char hasOpt, char rem, char *FileOne, char *FileTwo);
 
-
-int main(int argc, char *argv[])
+int Ne2x_run_from_argv(int argc, char *argv[])
 {
 
 /* We may or may not need to know current directory when the executable
@@ -262,6 +263,7 @@ int main(int argc, char *argv[])
 	char mOpt;
 	char hasOpt;
 	char rem = 0;
+	int retcode = 0;
 
 	FileOne = (char *) malloc(PATHFILE * sizeof(char));
 	*FileOne = '\0';
@@ -295,31 +297,31 @@ int main(int argc, char *argv[])
 		c = argv[1][0];
 		if ((n <= 2) || (c != 'i' && c != 'm' && c!= 'c')) {
 			printf ("Illegal argument!\n");
-			exit (0);
+			goto done;
 		};
 		if (c == 'i' && argv[1][1] != ':') {
 			printf ("Illegal argument!\n");
-			exit (0);
+			goto done;
 		};
 		if (c == 'c' && argv[1][1] != ':') {
 			printf ("Illegal argument!\n");
-			exit (0);
+			goto done;
 		};
 		if (c == 'm') {
 			if (argv[1][1] == '+') {
 				if (n == 3) {
 					printf ("Illegal argument!\n");
-					exit (0);
+					goto done;
 				};
 				if (argv[1][2] != ':') {
 					printf ("Illegal argument!\n");
-					exit (0);
+					goto done;
 				};
 				mOpt = 1;	// run multiple files with more parameters
 			} else {
 				if (argv[1][1] != ':') {
 					printf ("Illegal argument!\n");
-					exit (0);
+					goto done;
 				};
 			// things are OK: run multiple files, with less parameters
 			};
@@ -337,7 +339,7 @@ int main(int argc, char *argv[])
 
 			printf ("\n*** Number of data files = %d ***\n", n);
 			if (rem == 1) remove (FileOne);
-			exit (0);
+			goto done;
 		};
 		if (argv[1][0] == 'c') {
 			// "rm" stands for remove, to remove this file
@@ -346,7 +348,7 @@ int main(int argc, char *argv[])
 
 			printf ("\n*** Number of data files = %d ***\n", n);
 			if (rem == 1) remove (FileOne);
-			exit (0);
+			goto done;
 		};
 		if (argv[1][0] == 'i') {
 		// first directive file is info on input and output files.
@@ -372,9 +374,21 @@ int main(int argc, char *argv[])
 		};	// end of "if (argv[1][0] == 'i')"
 
 	};	// end of "if (argc < 2) else .. "
-	return 0;
+
+done:
+	free (FileOne);
+	free (FileTwo);
+	return retcode;
 
 }
+
+#ifndef NE2X_NO_MAIN
+int main(int argc, char *argv[])
+{
+	return Ne2x_run_from_argv(argc, argv);
+
+}
+#endif
 
 
 

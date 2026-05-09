@@ -1,3 +1,6 @@
+# regression test folders
+.regression/
+
 # Prerequisites
 *.d
 

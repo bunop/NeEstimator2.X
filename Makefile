@@ -1,75 +1,46 @@
-########################################################################
-####################### Makefile Template ##############################
-########################################################################
-
-# Compiler settings - Can be customized.
 CC = gcc
-CXXFLAGS = -std=c11 -Wall
-LDFLAGS = -lm
+CXX = g++
 
-# Detect the operating system: compiles static on Linux
+CFLAGS = -std=c11 -Wall
+CXXFLAGS = -std=c++17 -Wall
+LDLIBS = -lm
+
+APPNAME = Ne2x
+CPPAPP = Ne2x_cpp
+LIBNAME = libne2x.a
+
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Linux)
-    CXXFLAGS += -static
+    CFLAGS += -static
 endif
 
-# Makefile settings - Can be customized.
-APPNAME = Ne2x
-EXT = .c
-SRCDIR = .
-OBJDIR = .
+.PHONY: all clean test asan
 
-############## Do not change anything from here downwards! #############
-SRC = $(wildcard $(SRCDIR)/*$(EXT))
-OBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)/%.o)
-DEP = $(OBJ:$(OBJDIR)/%.o=%.d)
-# UNIX-based OS variables & settings
-RM = rm
-DELOBJ = $(OBJ)
-# Windows OS variables & settings
-DEL = del
-EXE = .exe
-WDELOBJ = $(SRC:$(SRCDIR)/%$(EXT)=$(OBJDIR)\\%.o)
+all: $(APPNAME) $(LIBNAME) $(CPPAPP)
 
-########################################################################
-####################### Targets beginning here #########################
-########################################################################
+$(APPNAME): Ne2x.o
+	$(CC) $(CFLAGS) -o $@ $^ $(LDLIBS)
 
-all: $(APPNAME)
+Ne2x.o: Ne2x.c Ne2x_api.h
+	$(CC) $(CFLAGS) -c -o $@ Ne2x.c
 
-# Builds the app
-$(APPNAME): $(OBJ)
-	$(CC) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+Ne2x_lib.o: Ne2x.c Ne2x_api.h
+	$(CC) $(CFLAGS) -DNE2X_NO_MAIN -c -o $@ Ne2x.c
 
-# Creates the dependecy rules
-%.d: $(SRCDIR)/%$(EXT)
-	@$(CPP) $(CFLAGS) $< -MM -MT $(@:%.d=$(OBJDIR)/%.o) >$@
+$(LIBNAME): Ne2x_lib.o
+	ar rcs $@ $^
 
-# Includes all .h files
--include $(DEP)
+main.o: main.cpp Ne2x_api.h
+	$(CXX) $(CXXFLAGS) -c -o $@ main.cpp
 
-# Building rule for .o files and its .c/.cpp in combination with all .h
-$(OBJDIR)/%.o: $(SRCDIR)/%$(EXT)
-	$(CC) $(CXXFLAGS) -o $@ -c $<
+$(CPPAPP): main.o $(LIBNAME)
+	$(CXX) $(CXXFLAGS) -o $@ main.o -L. -lne2x $(LDLIBS)
 
-################### Cleaning rules for Unix-based OS ###################
-# Cleans complete project
-.PHONY: clean
+test: $(APPNAME) $(CPPAPP)
+	bash regression_test.sh
+
+asan:
+	$(CC) -fsanitize=address -g3 -std=c11 -Wall -o Ne2x_asan Ne2x.c -lm
+
 clean:
-	$(RM) $(DELOBJ) $(DEP) $(APPNAME)
-
-# Cleans only all files with the extension .d
-.PHONY: cleandep
-cleandep:
-	$(RM) $(DEP)
-
-#################### Cleaning rules for Windows OS #####################
-# Cleans complete project
-.PHONY: cleanw
-cleanw:
-	$(DEL) $(WDELOBJ) $(DEP) $(APPNAME)$(EXE)
-
-# Cleans only all files with the extension .d
-.PHONY: cleandepw
-cleandepw:
-	$(DEL) $(DEP)
+	rm -f Ne2x.o Ne2x_lib.o main.o $(APPNAME) $(CPPAPP) $(LIBNAME) Ne2x_asan *.d
