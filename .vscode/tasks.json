@@ -31,7 +31,7 @@
         },
         {
             "type": "cppbuild",
-            "label": "Build Ne2x Release",
+            "label": "Build Ne2x Release (Linux)",
             "command": "/usr/bin/gcc",
             "args": [
                 "-fdiagnostics-color=always",
@@ -51,7 +51,30 @@
                 "$gcc"
             ],
             "group": "build",
-            "detail": "Compile Ne2x optimized for release"
+            "detail": "Compile Ne2x optimized for release (Linux with static linking)"
+        },
+        {
+            "type": "cppbuild",
+            "label": "Build Ne2x Release",
+            "command": "/usr/bin/gcc",
+            "args": [
+                "-fdiagnostics-color=always",
+                "-std=c11",
+                "-Wall",
+                "-O3",
+                "${workspaceFolder}/Ne2x.c",
+                "-o",
+                "${workspaceFolder}/Ne2x",
+                "-lm"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build",
+            "detail": "Compile Ne2x optimized for release (portable, aligns with Makefile)"
         },
         {
             "type": "cppbuild",
