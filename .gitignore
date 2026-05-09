@@ -60,6 +60,8 @@ test_Ne.txt
 test_NexLD.txt
 test_genepopNoDat.txt
 
-# Other binary files for GUI
+# Other binary files that should not be tracked
 *.jar
 Ne2L
+Ne2x_cpp
+Ne2x_asan
