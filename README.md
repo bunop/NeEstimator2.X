@@ -226,7 +226,7 @@ Practical advice:
 
 Reference: [#2](https://github.com/bunop/NeEstimator2.X/issues/2)
 
-Confirmed by user reports, both binary and `.jar` file for for GUI-driven runs:
+Confirmed by user reports, both binary and `.jar` files are needed for GUI-driven runs:
 
 - Windows: `Ne2.exe` and `NeEstimator2x.jar` in the same folder.
 - macOS: `Ne2M` and `NeEstimator2x.jar` in the same folder.

@@ -58,7 +58,7 @@
             "request": "launch",
             "program": "${workspaceFolder}/Ne2x",
             "args": [
-                "m:multi_input.txt"
+                "m:test_multi.txt"
             ],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

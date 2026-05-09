@@ -1,0 +1,14 @@
+15		* All methods, the temporal methods include all three: Pollak, Nei/Tajima, Jorde/Ryman.
+3		* 3 positive critical values, critical values will be listed on next line
+0.1  0.05  0.02	* All 3 positive critical values.
+0 0 1		* Plan II for temporals. Generations are 0, 1 applied to all populations
+test_genepop.txt	* Input file.
+Test_multi1.out	* Main output file name.
+Y *************** Continuing next input *********** INPUT  4 ******************
+8  2		* 8 = Temporal methods only. Second number 2 = Nei/Tajima; so only Nei/Tajima temporal method is run
+3		* 3 critical values.
+0.1  0.05  0.02	* Critical values
+200 0 1		* Generations for temporal. (Plan I, Census size = 200)
+test_genepop.txt	* input file
+Test_multi2.out*	* MAIN output file name ended by asterisk, so all outputs will be appended
+q *************** The first letter is neither 'y' nor 'Y',

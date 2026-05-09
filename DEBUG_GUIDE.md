@@ -20,7 +20,7 @@ The `.vscode/launch.json` file contains several debug configurations tailored fo
    - To test interactive mode
 
 ### 3. **Debug Ne2x (multi files)**
-   - Executes: `./Ne2x m:multi_input.txt`
+   - Executes: `./Ne2x m:test_multi.txt`
    - To test multiple files mode
 
 ### 4. **Debug Ne2x (stop at main)** 🔍
