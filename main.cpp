@@ -10,7 +10,7 @@ int RunDirect(char misFilSuf[]);
 int RunMultiFiles(char *mFileName, char mOpt);
 int RunMultiCommon(char *mFileName);
 int RunOption(char misFilSuf[], char LocSuf[], char BurSuf[], char hasOpt,
-              char rem, char *FileOne, char *FileTwo);
+              char remove, char *FileOne, char *FileTwo);
 }
 
 // Anonymous namespace: everything inside this block is private to this file.
@@ -127,15 +127,17 @@ int main(int argc, char **argv) {
     // Multi-file mode: run the batch processor and optionally remove the
     // control file when the user asked for rm.
     if (command == 'm') {
-        char rem = 0;
+        // this varible check if the user want to remove the control file after
+        // the batch process, it is set to 1 if rm was requested and 0 otherwise.
+        char remove = 0;
         if (argc > 2) {
-            rem = equalsIgnoreCase(argv[2], "rm") ? 1 : 0;
+            remove = equalsIgnoreCase(argv[2], "rm") ? 1 : 0;
         }
 
         const int dataFiles = RunMultiFiles(fileOne.data(), mOpt);
         printDataFileCount(dataFiles);
 
-        if (rem == 1) {
+        if (remove == 1) {
             std::remove(fileOne.c_str());
         }
         return 0;
@@ -144,31 +146,31 @@ int main(int argc, char **argv) {
     // Common-settings mode: use the shared configuration file and optionally
     // remove it afterward if rm was requested.
     if (command == 'c') {
-        char rem = 0;
+        char remove = 0;
         if (argc > 2) {
-            rem = equalsIgnoreCase(argv[2], "rm") ? 1 : 0;
+            remove = equalsIgnoreCase(argv[2], "rm") ? 1 : 0;
         }
 
         const int dataFiles = RunMultiCommon(fileOne.data());
         printDataFileCount(dataFiles);
 
-        if (rem == 1) {
+        if (remove == 1) {
             std::remove(fileOne.c_str());
         }
         return 0;
     }
 
     char hasOpt = 0;
-    char rem = 0;
+    char remove = 0;
     std::string fileTwo;
 
     // Info-file mode: the first file is mandatory, the second file is optional
     // and starts with o:. The rm request can appear in either argument slot.
     if (argc > 2) {
         hasOpt = (argv[2][0] == 'o' && argv[2][1] == ':') ? 1 : 0;
-        rem = (std::strcmp(argv[2], "rm") == 0) ? 1 : 0;
+        remove = (std::strcmp(argv[2], "rm") == 0) ? 1 : 0;
         if (hasOpt == 1 && argc > 3) {
-            rem = (std::strcmp(argv[3], "rm") == 0) ? 1 : 0;
+            remove = (std::strcmp(argv[3], "rm") == 0) ? 1 : 0;
         }
     }
 
@@ -176,7 +178,7 @@ int main(int argc, char **argv) {
         fileTwo = tailAfterPrefix(std::string_view(argv[2]), 2U);
     }
 
-    RunOption(misFilSuf, LocSuf, BurSuf, hasOpt, rem,
+    RunOption(misFilSuf, LocSuf, BurSuf, hasOpt, remove,
               fileOne.data(), fileTwo.data());
     return 0;
 }
